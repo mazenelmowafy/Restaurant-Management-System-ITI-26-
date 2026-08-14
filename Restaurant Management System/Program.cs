@@ -47,8 +47,6 @@ namespace Restaurant_Management_System
             app.MapRazorPages();
 
             app.Run();
-            Console.WriteLine("hksakgfrkhjfsda");
-            Console.WriteLine("for the clone");
         }
     }
 }
