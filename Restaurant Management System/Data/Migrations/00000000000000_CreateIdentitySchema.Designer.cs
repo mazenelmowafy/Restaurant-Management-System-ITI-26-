@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Restaurant_Management_System.Data;
+using RestaurantManagementSystem.Data;
 using System;
 
 namespace Restaurant_Management_System.Data.Migrations

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Restaurant_Management_System.Data;
-
+using RestaurantManagementSystem.Data;
 namespace Restaurant_Management_System
 {
     public class Program
