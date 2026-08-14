@@ -47,7 +47,6 @@ namespace Restaurant_Management_System
             app.MapRazorPages();
 
             app.Run();
-            Console.WriteLine("sdhigsakdgk");
         }
     }
 }
