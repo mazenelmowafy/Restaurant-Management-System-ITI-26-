@@ -1,0 +1,57 @@
+﻿@model IEnumerable<RestaurantManagementSystem.Models.Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<h1>Products</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Product</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Available</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Admin</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@item.IsAvailable</td>
+                <td>@item.Price</td>
+                <td>@item.Category</td>
+                <td>
+                    @item.Admin?.FirstName @item.Admin?.LastName
+                </td>
+                <td>
+                    <a asp-action="Edit"
+                       asp-route-id="@item.ProductId">
+                        Edit
+                    </a>
+                    |
+                    <a asp-action="Details"
+                       asp-route-id="@item.ProductId">
+                        Details
+                    </a>
+                    |
+                    <a asp-action="Delete"
+                       asp-route-id="@item.ProductId">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
