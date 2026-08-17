@@ -8,88 +8,115 @@ namespace RestaurantManagementSystem.Controllers
 {
     public class ProductsController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public ProductsController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
-            using var context = new ApplicationDbContext();
-            var products = context.Products.Include(p => p.Admin).ToList();
+            var products = _context.Products
+                .Include(p => p.Admin)
+                .ToList();
+
             return View(products);
         }
 
         public IActionResult Details(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
-            using var context = new ApplicationDbContext();
-            var product = context.Products
+            var product = _context.Products
                 .Include(p => p.Admin)
                 .FirstOrDefault(p => p.ProductId == id);
 
-            if (product == null) return NotFound();
+            if (product == null)
+                return NotFound();
+
             return View(product);
         }
 
         public IActionResult Create()
         {
-            using var context = new ApplicationDbContext();
-            LoadAdmins(context);
+            LoadAdmins();
+
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Name,Description,IsAvailable,Price,Category,AdminId")] Product product)
+        public IActionResult Create(
+            [Bind("Name,Description,IsAvailable,Price,Category,AdminId")]
+            Product product)
         {
             ModelState.Remove(nameof(Product.Admin));
 
-            using var context = new ApplicationDbContext();
-
-            if (!context.Admins.Any(a => a.AdminId == product.AdminId))
-                ModelState.AddModelError(nameof(Product.AdminId), "Please select a valid admin.");
+            if (!_context.Admins.Any(a => a.AdminId == product.AdminId))
+            {
+                ModelState.AddModelError(
+                    nameof(Product.AdminId),
+                    "Please select a valid admin.");
+            }
 
             if (!ModelState.IsValid)
             {
-                LoadAdmins(context, product.AdminId);
+                LoadAdmins(product.AdminId);
                 return View(product);
             }
 
-            context.Products.Add(product);
-            context.SaveChanges();
+            _context.Products.Add(product);
+            _context.SaveChanges();
+
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Edit(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
-            using var context = new ApplicationDbContext();
-            var product = context.Products.Find(id);
-            if (product == null) return NotFound();
+            var product = _context.Products.Find(id);
 
-            LoadAdmins(context, product.AdminId);
+            if (product == null)
+                return NotFound();
+
+            LoadAdmins(product.AdminId);
+
             return View(product);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("ProductId,Name,Description,IsAvailable,Price,Category,AdminId")] Product product)
+        public IActionResult Edit(
+            int id,
+            [Bind("ProductId,Name,Description,IsAvailable,Price,Category,AdminId")]
+            Product product)
         {
-            if (id != product.ProductId) return NotFound();
+            if (id != product.ProductId)
+                return NotFound();
 
             ModelState.Remove(nameof(Product.Admin));
 
-            using var context = new ApplicationDbContext();
-
-            if (!context.Admins.Any(a => a.AdminId == product.AdminId))
-                ModelState.AddModelError(nameof(Product.AdminId), "Please select a valid admin.");
+            if (!_context.Admins.Any(a => a.AdminId == product.AdminId))
+            {
+                ModelState.AddModelError(
+                    nameof(Product.AdminId),
+                    "Please select a valid admin.");
+            }
 
             if (!ModelState.IsValid)
             {
-                LoadAdmins(context, product.AdminId);
+                LoadAdmins(product.AdminId);
                 return View(product);
             }
 
-            var existingProduct = context.Products.Find(id);
-            if (existingProduct == null) return NotFound();
+            var existingProduct = _context.Products.Find(id);
+
+            if (existingProduct == null)
+                return NotFound();
 
             existingProduct.Name = product.Name;
             existingProduct.Description = product.Description;
@@ -98,20 +125,23 @@ namespace RestaurantManagementSystem.Controllers
             existingProduct.Category = product.Category;
             existingProduct.AdminId = product.AdminId;
 
-            context.SaveChanges();
+            _context.SaveChanges();
+
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Delete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
-            using var context = new ApplicationDbContext();
-            var product = context.Products
+            var product = _context.Products
                 .Include(p => p.Admin)
                 .FirstOrDefault(p => p.ProductId == id);
 
-            if (product == null) return NotFound();
+            if (product == null)
+                return NotFound();
+
             return View(product);
         }
 
@@ -119,21 +149,20 @@ namespace RestaurantManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            using var context = new ApplicationDbContext();
-            var product = context.Products.Find(id);
+            var product = _context.Products.Find(id);
 
             if (product != null)
             {
-                context.Products.Remove(product);
-                context.SaveChanges();
+                _context.Products.Remove(product);
+                _context.SaveChanges();
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-        private void LoadAdmins(ApplicationDbContext context, int? selectedId = null)
+        private void LoadAdmins(int? selectedId = null)
         {
-            var admins = context.Admins
+            var admins = _context.Admins
                 .OrderBy(a => a.FirstName)
                 .ThenBy(a => a.LastName)
                 .Select(a => new
@@ -143,7 +172,11 @@ namespace RestaurantManagementSystem.Controllers
                 })
                 .ToList();
 
-            ViewBag.AdminId = new SelectList(admins, "AdminId", "FullName", selectedId);
+            ViewBag.AdminId = new SelectList(
+                admins,
+                "AdminId",
+                "FullName",
+                selectedId);
         }
     }
 }

@@ -13,19 +13,20 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
         // This is the one thing that can't be done with "new ApplicationDbContext()" style,
         // so it comes in through the constructor.
         private readonly IWebHostEnvironment _environment;
+        private readonly ApplicationDbContext _context;
 
         // Folder (inside wwwroot) where product images are saved.
         private const string ImagesFolder = "images/products";
 
-        public ProductsController(IWebHostEnvironment environment)
+        public ProductsController(IWebHostEnvironment environment, ApplicationDbContext context)
         {
             _environment = environment;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            using var context = new ApplicationDbContext();
-            var products = context.Products.Include(p => p.Admin).ToList();
+            var products = _context.Products.Include(p => p.Admin).ToList();
             return View(products);
         }
 
@@ -33,10 +34,7 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
         {
             if (id == null) return NotFound();
 
-            using var context = new ApplicationDbContext();
-            var product = context.Products
-                .Include(p => p.Admin)
-                .FirstOrDefault(p => p.ProductId == id);
+            var product = _context.Products.Include(p => p.Admin).FirstOrDefault(p => p.ProductId == id);
 
             if (product == null) return NotFound();
             return View(product);
@@ -44,8 +42,7 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            using var context = new ApplicationDbContext();
-            LoadAdmins(context);
+            LoadAdmins();
             return View();
         }
 
@@ -57,17 +54,19 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
         {
             ModelState.Remove(nameof(Product.Admin));
 
-            using var context = new ApplicationDbContext();
-
-            if (!context.Admins.Any(a => a.AdminId == product.AdminId))
-                ModelState.AddModelError(nameof(Product.AdminId), "Please select a valid admin.");
+            if (!_context.Admins.Any(a => a.AdminId == product.AdminId))
+                ModelState.AddModelError(
+                    nameof(Product.AdminId),
+                    "Please select a valid admin.");
 
             if (ImageFile != null && !IsValidImage(ImageFile))
-                ModelState.AddModelError(nameof(ImageFile), "Please upload a valid image file (jpg, jpeg, png, gif) under 5 MB.");
+                ModelState.AddModelError(
+                    nameof(ImageFile),
+                    "Please upload a valid image file (jpg, jpeg, png, gif) under 5 MB.");
 
             if (!ModelState.IsValid)
             {
-                LoadAdmins(context, product.AdminId);
+                LoadAdmins(product.AdminId);
                 return View(product);
             }
 
@@ -76,51 +75,60 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
                 product.ImageFileName = SaveImage(ImageFile);
             }
 
-            context.Products.Add(product);
-            context.SaveChanges();
+            _context.Products.Add(product);
+            _context.SaveChanges();
+
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Edit(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
-            using var context = new ApplicationDbContext();
-            var product = context.Products.Find(id);
-            if (product == null) return NotFound();
+            var product = _context.Products.Find(id);
 
-            LoadAdmins(context, product.AdminId);
+            if (product == null)
+                return NotFound();
+
+            LoadAdmins(product.AdminId);
+
             return View(product);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(
-            int id,
-            [Bind("ProductId,Name,Description,IsAvailable,Price,Category,AdminId,ImageFileName")] Product product,
-            IFormFile? ImageFile,
-            bool RemoveImage = false)
+             int id,
+             [Bind("ProductId,Name,Description,IsAvailable,Price,Category,AdminId,ImageFileName")] Product product,
+             IFormFile? ImageFile,
+             bool RemoveImage = false)
         {
-            if (id != product.ProductId) return NotFound();
+            if (id != product.ProductId)
+                return NotFound();
 
             ModelState.Remove(nameof(Product.Admin));
 
-            using var context = new ApplicationDbContext();
-
-            if (!context.Admins.Any(a => a.AdminId == product.AdminId))
-                ModelState.AddModelError(nameof(Product.AdminId), "Please select a valid admin.");
+            if (!_context.Admins.Any(a => a.AdminId == product.AdminId))
+                ModelState.AddModelError(
+                    nameof(Product.AdminId),
+                    "Please select a valid admin.");
 
             if (ImageFile != null && !IsValidImage(ImageFile))
-                ModelState.AddModelError(nameof(ImageFile), "Please upload a valid image file (jpg, jpeg, png, gif) under 5 MB.");
+                ModelState.AddModelError(
+                    nameof(ImageFile),
+                    "Please upload a valid image file (jpg, jpeg, png, gif) under 5 MB.");
 
             if (!ModelState.IsValid)
             {
-                LoadAdmins(context, product.AdminId);
+                LoadAdmins(product.AdminId);
                 return View(product);
             }
 
-            var existingProduct = context.Products.Find(id);
-            if (existingProduct == null) return NotFound();
+            var existingProduct = _context.Products.Find(id);
+
+            if (existingProduct == null)
+                return NotFound();
 
             var oldImageFileName = existingProduct.ImageFileName;
 
@@ -140,9 +148,10 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
                 existingProduct.ImageFileName = null;
             }
 
-            context.SaveChanges();
+            _context.SaveChanges();
 
-            if ((ImageFile != null || RemoveImage) && !string.IsNullOrEmpty(oldImageFileName))
+            if ((ImageFile != null || RemoveImage) &&
+                !string.IsNullOrEmpty(oldImageFileName))
             {
                 DeleteImageFile(oldImageFileName);
             }
@@ -152,28 +161,28 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
 
         public IActionResult Delete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
-            using var context = new ApplicationDbContext();
-            var product = context.Products
+            var product = _context.Products
                 .Include(p => p.Admin)
                 .FirstOrDefault(p => p.ProductId == id);
 
-            if (product == null) return NotFound();
+            if (product == null)
+                return NotFound();
+
             return View(product);
         }
-
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            using var context = new ApplicationDbContext();
-            var product = context.Products.Find(id);
+            var product = _context.Products.Find(id);
 
             if (product != null)
             {
-                context.Products.Remove(product);
-                context.SaveChanges();
+                _context.Products.Remove(product);
+                _context.SaveChanges();
 
                 if (!string.IsNullOrEmpty(product.ImageFileName))
                 {
@@ -184,9 +193,9 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private void LoadAdmins(ApplicationDbContext context, int? selectedId = null)
+        private void LoadAdmins(int? selectedId = null)
         {
-            var admins = context.Admins
+            var admins = _context.Admins
                 .OrderBy(a => a.FirstName)
                 .ThenBy(a => a.LastName)
                 .Select(a => new
@@ -196,7 +205,11 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
                 })
                 .ToList();
 
-            ViewBag.AdminId = new SelectList(admins, "AdminId", "FullName", selectedId);
+            ViewBag.AdminId = new SelectList(
+                admins,
+                "AdminId",
+                "FullName",
+                selectedId);
         }
 
         private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };

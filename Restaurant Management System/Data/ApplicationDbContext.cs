@@ -9,23 +9,38 @@ namespace RestaurantManagementSystem.Data
         : base(options)
         {
         }
-        public ApplicationDbContext()
-        {
-        }
+ 
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(
-                "Server=(localdb)\\MSSQLLocalDB;Database=RestaurantManagementSystem;Trusted_Connection=True;TrustServerCertificate=True;"
-            );
-        }
+  
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+
+            modelBuilder.Entity<Product>()
+                .Property(p => p.Price)
+                .HasPrecision(18, 2);
+            modelBuilder.Entity<Order>()
+                .Property(o => o.TotalAmount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<OrderItem>()
+                .Property(oi => oi.UnitPrice)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<OrderItem>()
+                .Property(oi => oi.SubTotal)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Product>()
+                .HasOne(x => x.Admin)
+                .WithMany()
+                .HasForeignKey(x => x.AdminId);
+
             modelBuilder.Entity<OrderItem>()
                 .HasKey(x => new { x.OrderId, x.ProductId });
 
@@ -43,11 +58,6 @@ namespace RestaurantManagementSystem.Data
                 .HasOne(x => x.Product)
                 .WithMany()
                 .HasForeignKey(x => x.ProductId);
-
-            modelBuilder.Entity<Product>()
-                .HasOne(x => x.Admin)
-                .WithMany()
-                .HasForeignKey(x => x.AdminId);
 
 
             // ==================== Seed Data ====================

@@ -6,22 +6,30 @@ namespace RestaurantManagementSystem.Controllers
 {
     public class CustomersController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public CustomersController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
-            using var context = new ApplicationDbContext();
-
-            var customers = context.Customers.ToList();
+            var customers = _context.Customers.ToList();
 
             return View(customers);
         }
 
         public IActionResult Details(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
-            using var context = new ApplicationDbContext();
-            var customer = context.Customers.FirstOrDefault(c => c.CustomerID == id);
-            if (customer == null) return NotFound();
+            var customer = _context.Customers
+                .FirstOrDefault(c => c.CustomerID == id);
+
+            if (customer == null)
+                return NotFound();
 
             return View(customer);
         }
@@ -33,45 +41,53 @@ namespace RestaurantManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("FirstName,LastName,Email,Phone,Street,City,ZipCode")] Customer customer)
+        public IActionResult Create(
+            [Bind("FirstName,LastName,Email,Phone,Street,City,ZipCode")]
+            Customer customer)
         {
             ModelState.Remove(nameof(Customer.Orders));
 
             if (!ModelState.IsValid)
                 return View(customer);
 
-            using var context = new ApplicationDbContext();
-            context.Customers.Add(customer);
-            context.SaveChanges();
+            _context.Customers.Add(customer);
+            _context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Edit(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
-            using var context = new ApplicationDbContext();
-            var customer = context.Customers.Find(id);
-            if (customer == null) return NotFound();
+            var customer = _context.Customers.Find(id);
+
+            if (customer == null)
+                return NotFound();
 
             return View(customer);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("CustomerID,FirstName,LastName,Email,Phone,Street,City,ZipCode")] Customer customer)
+        public IActionResult Edit(
+            int id,
+            [Bind("CustomerID,FirstName,LastName,Email,Phone,Street,City,ZipCode")]
+            Customer customer)
         {
-            if (id != customer.CustomerID) return NotFound();
+            if (id != customer.CustomerID)
+                return NotFound();
 
             ModelState.Remove(nameof(Customer.Orders));
 
             if (!ModelState.IsValid)
                 return View(customer);
 
-            using var context = new ApplicationDbContext();
-            var existingCustomer = context.Customers.Find(id);
-            if (existingCustomer == null) return NotFound();
+            var existingCustomer = _context.Customers.Find(id);
+
+            if (existingCustomer == null)
+                return NotFound();
 
             existingCustomer.FirstName = customer.FirstName;
             existingCustomer.LastName = customer.LastName;
@@ -81,17 +97,21 @@ namespace RestaurantManagementSystem.Controllers
             existingCustomer.City = customer.City;
             existingCustomer.ZipCode = customer.ZipCode;
 
-            context.SaveChanges();
+            _context.SaveChanges();
+
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Delete(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+                return NotFound();
 
-            using var context = new ApplicationDbContext();
-            var customer = context.Customers.FirstOrDefault(c => c.CustomerID == id);
-            if (customer == null) return NotFound();
+            var customer = _context.Customers
+                .FirstOrDefault(c => c.CustomerID == id);
+
+            if (customer == null)
+                return NotFound();
 
             return View(customer);
         }
@@ -100,13 +120,12 @@ namespace RestaurantManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            using var context = new ApplicationDbContext();
-            var customer = context.Customers.Find(id);
+            var customer = _context.Customers.Find(id);
 
             if (customer != null)
             {
-                context.Customers.Remove(customer);
-                context.SaveChanges();
+                _context.Customers.Remove(customer);
+                _context.SaveChanges();
             }
 
             return RedirectToAction(nameof(Index));

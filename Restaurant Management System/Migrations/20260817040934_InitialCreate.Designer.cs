@@ -9,11 +9,11 @@ using RestaurantManagementSystem.Data;
 
 #nullable disable
 
-namespace Restaurant_Management_System.Data.Migrations
+namespace Restaurant_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260816211012_contextEdits")]
-    partial class contextEdits
+    [Migration("20260817040934_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,6 +124,7 @@ namespace Restaurant_Management_System.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalAmount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("OrderId");
@@ -145,9 +146,11 @@ namespace Restaurant_Management_System.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("SubTotal")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("UnitPrice")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("OrderId", "ProductId");
@@ -187,6 +190,7 @@ namespace Restaurant_Management_System.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ProductId");
