@@ -12,7 +12,7 @@ using RestaurantManagementSystem.Data;
 namespace Restaurant_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260817040934_InitialCreate")]
+    [Migration("20260817211234_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -85,6 +85,10 @@ namespace Restaurant_Management_System.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -206,7 +210,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Burgers",
                             Description = "Beef burger with cheese and fresh vegetables",
-                            ImageFileName = "classic_burger.jpg",
+                            ImageFileName = "classic_burger.png",
                             IsAvailable = true,
                             Name = "Classic Burger",
                             Price = 150m
@@ -217,7 +221,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Burgers",
                             Description = "Crispy chicken burger with special sauce",
-                            ImageFileName = "chicken_burger.jpg",
+                            ImageFileName = "chicken_burger.png",
                             IsAvailable = true,
                             Name = "Chicken Burger",
                             Price = 140m
@@ -228,7 +232,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Burgers",
                             Description = "Double beef burger with double cheese",
-                            ImageFileName = "double_beef_burger.jpg",
+                            ImageFileName = "double_beef_burger.png",
                             IsAvailable = true,
                             Name = "Double Beef Burger",
                             Price = 220m
@@ -239,7 +243,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Pizza",
                             Description = "Pizza with tomato sauce and mozzarella cheese",
-                            ImageFileName = "margherita_pizza.jpg",
+                            ImageFileName = "margherita_pizza.png",
                             IsAvailable = true,
                             Name = "Margherita Pizza",
                             Price = 180m
@@ -250,7 +254,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Pizza",
                             Description = "Pizza topped with chicken and vegetables",
-                            ImageFileName = "chicken_pizza.jpg",
+                            ImageFileName = "chicken_pizza.png",
                             IsAvailable = true,
                             Name = "Chicken Pizza",
                             Price = 230m
@@ -261,7 +265,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Pizza",
                             Description = "Pizza with pepperoni and mozzarella cheese",
-                            ImageFileName = "pepperoni_pizza.jpg",
+                            ImageFileName = "pepperoni_pizza.png",
                             IsAvailable = true,
                             Name = "Pepperoni Pizza",
                             Price = 250m
@@ -272,7 +276,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Pasta",
                             Description = "Creamy pasta with grilled chicken",
-                            ImageFileName = "chicken_pasta.jpg",
+                            ImageFileName = "chicken_pasta.png",
                             IsAvailable = true,
                             Name = "Chicken Pasta",
                             Price = 170m
@@ -283,7 +287,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Pasta",
                             Description = "Pasta with creamy Alfredo sauce",
-                            ImageFileName = "alfredo_pasta.jpg",
+                            ImageFileName = "alfredo_pasta.png",
                             IsAvailable = true,
                             Name = "Alfredo Pasta",
                             Price = 160m
@@ -294,7 +298,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Sandwiches",
                             Description = "Grilled chicken sandwich with vegetables",
-                            ImageFileName = "chicken_sandwich.jpg",
+                            ImageFileName = "chicken_sandwich.png",
                             IsAvailable = true,
                             Name = "Chicken Sandwich",
                             Price = 120m
@@ -305,7 +309,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Sandwiches",
                             Description = "Crispy chicken with special sauce",
-                            ImageFileName = "crispy_chicken_sandwich.jpg",
+                            ImageFileName = "crispy_chicken_sandwich.png",
                             IsAvailable = true,
                             Name = "Crispy Chicken Sandwich",
                             Price = 130m
@@ -316,7 +320,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Sides",
                             Description = "Crispy golden french fries",
-                            ImageFileName = "french_fries.jpg",
+                            ImageFileName = "french_fries.png",
                             IsAvailable = true,
                             Name = "French Fries",
                             Price = 60m
@@ -327,7 +331,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Sides",
                             Description = "French fries topped with melted cheese",
-                            ImageFileName = "cheese_fries.jpg",
+                            ImageFileName = "cheese_fries.png",
                             IsAvailable = true,
                             Name = "Cheese Fries",
                             Price = 85m
@@ -338,7 +342,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Meals",
                             Description = "Chicken, fries and soft drink",
-                            ImageFileName = "chicken_meal.jpg",
+                            ImageFileName = "chicken_meal.png",
                             IsAvailable = true,
                             Name = "Chicken Meal",
                             Price = 260m
@@ -349,7 +353,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Meals",
                             Description = "Beef burger, fries and soft drink",
-                            ImageFileName = "beef_meal.jpg",
+                            ImageFileName = "beef_meal.png",
                             IsAvailable = true,
                             Name = "Beef Meal",
                             Price = 280m
@@ -360,7 +364,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Drinks",
                             Description = "Cold soft drink",
-                            ImageFileName = "cola.jpg",
+                            ImageFileName = "cola.png",
                             IsAvailable = true,
                             Name = "Cola",
                             Price = 50m
@@ -371,7 +375,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Drinks",
                             Description = "Fresh orange juice",
-                            ImageFileName = "orange_juice.jpg",
+                            ImageFileName = "orange_juice.png",
                             IsAvailable = true,
                             Name = "Orange Juice",
                             Price = 70m
@@ -382,7 +386,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Drinks",
                             Description = "Fresh strawberry juice",
-                            ImageFileName = "strawberry_juice.jpg",
+                            ImageFileName = "strawberry_juice.png",
                             IsAvailable = true,
                             Name = "Strawberry Juice",
                             Price = 80m
@@ -393,7 +397,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Desserts",
                             Description = "Chocolate cake with chocolate sauce",
-                            ImageFileName = "chocolate_cake.jpg",
+                            ImageFileName = "chocolate_cake.png",
                             IsAvailable = true,
                             Name = "Chocolate Cake",
                             Price = 100m
@@ -404,7 +408,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Desserts",
                             Description = "Classic creamy cheesecake",
-                            ImageFileName = "cheesecake.jpg",
+                            ImageFileName = "cheesecake.png",
                             IsAvailable = true,
                             Name = "Cheesecake",
                             Price = 110m
@@ -415,7 +419,7 @@ namespace Restaurant_Management_System.Migrations
                             AdminId = 1,
                             Category = "Desserts",
                             Description = "Three scoops of vanilla ice cream",
-                            ImageFileName = "ice_cream.jpg",
+                            ImageFileName = "ice_cream.png",
                             IsAvailable = true,
                             Name = "Ice Cream",
                             Price = 90m
