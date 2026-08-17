@@ -48,14 +48,23 @@ namespace RestaurantManagementSystem.Controllers
             ModelState.Remove(nameof(Customer.Orders));
 
             if (!ModelState.IsValid)
+            {
+                foreach (var item in ModelState)
+                {
+                    foreach (var error in item.Value.Errors)
+                    {
+                        Console.WriteLine($"{item.Key}: {error.ErrorMessage}");
+                    }
+                }
+
                 return View(customer);
+            }
 
             _context.Customers.Add(customer);
             _context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
-
         public IActionResult Edit(int? id)
         {
             if (id == null)

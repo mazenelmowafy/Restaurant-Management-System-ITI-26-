@@ -2,52 +2,282 @@
 
 @{
     ViewData["Title"] = "Products";
-    // Layout = "_AdminLayout"; // Point this to the real Admin layout once it exists
 }
 
-<h1>Products</h1>
+<div class="products-page">
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Add Product</a>
-</p>
+    <!-- Header -->
+    <div class="products-header">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Image</th>
-            <th>@Html.DisplayNameFor(model => model.Name)</th>
-            <th>@Html.DisplayNameFor(model => model.Category)</th>
-            <th>@Html.DisplayNameFor(model => model.Price)</th>
-            <th>@Html.DisplayNameFor(model => model.IsAvailable)</th>
-            <th>Admin</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+        <div>
+            <h1>Products</h1>
+            <p>Manage all restaurant products.</p>
+        </div>
+
+        <a asp-area="Admin"
+           asp-controller="Products"
+           asp-action="Create"
+           class="admin-primary-btn">
+
+            <i class="bi bi-plus-lg"></i>
+            Add Product
+
+        </a>
+
+    </div>
+
+
+    <!-- Products Card -->
+    <div class="products-card">
+
+        <div class="products-card-header">
+
+            <div>
+                <h2>All Products</h2>
+
+                <span>
+                    @Model.Count() products
+                </span>
+            </div>
+
+            <div class="product-search">
+
+                <i class="bi bi-search"></i>
+
+                <input type="text"
+                       id="productSearch"
+                       placeholder="Search products..." />
+
+            </div>
+
+        </div>
+
+
+        @if (!Model.Any())
         {
-            <tr>
-                <td>
-                    @if (!string.IsNullOrEmpty(item.ImageFileName))
-                    {
-                        <img src="~/images/products/@item.ImageFileName" alt="@item.Name" width="60" />
-                    }
-                    else
-                    {
-                        <span class="text-muted">No image</span>
-                    }
-                </td>
-                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.Category)</td>
-                <td>@Html.DisplayFor(modelItem => item.Price)</td>
-                <td>@Html.DisplayFor(modelItem => item.IsAvailable)</td>
-                <td>@item.Admin?.FirstName @item.Admin?.LastName</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
-                    <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-                </td>
-            </tr>
+            <div class="products-empty">
+
+                <div class="empty-product-icon">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+
+                <h3>No products found</h3>
+
+                <p>
+                    There are currently no products in the system.
+                </p>
+
+                <a asp-area="Admin"
+                   asp-controller="Products"
+                   asp-action="Create"
+                   class="admin-primary-btn">
+
+                    <i class="bi bi-plus-lg"></i>
+                    Add First Product
+
+                </a>
+
+            </div>
         }
-    </tbody>
-</table>
+        else
+        {
+            <div class="products-table-wrapper">
+
+                <table class="products-table">
+
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Admin</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="productsTable">
+
+                        @foreach (var product in Model)
+                        {
+                            <tr>
+
+                                <!-- Product -->
+                                <td>
+                                    <div class="product-info">
+
+                                        <div class="product-table-image">
+
+                                            @if (!string.IsNullOrEmpty(product.ImageFileName))
+                                            {
+                                                <img src="~/images/products/@product.ImageFileName"
+                                                     alt="@product.Name" />
+                                            }
+                                            else
+                                            {
+                                                <div class="product-no-image">
+                                                    <i class="bi bi-image"></i>
+                                                </div>
+                                            }
+
+                                        </div>
+
+                                        <div class="product-name-info">
+
+                                            <strong>
+                                                @product.Name
+                                            </strong>
+
+                                            <small>
+                                                #@product.ProductId
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+                                </td>
+
+
+                                <!-- Category -->
+                                <td>
+                                    <span class="product-category">
+                                        @product.Category
+                                    </span>
+                                </td>
+
+
+                                <!-- Price -->
+                                <td>
+                                    <strong class="product-price">
+                                        @product.Price.ToString("0.00")
+                                    </strong>
+                                </td>
+
+
+                                <!-- Availability -->
+                                <td>
+
+                                    @if (product.IsAvailable)
+                                    {
+                                        <span class="product-status available">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                            Available
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="product-status unavailable">
+                                            <i class="bi bi-x-circle-fill"></i>
+                                            Unavailable
+                                        </span>
+                                    }
+
+                                </td>
+
+
+                                <!-- Admin -->
+                                <td>
+
+                                    <span class="product-admin">
+                                        @product.Admin?.FirstName
+                                        @product.Admin?.LastName
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Actions -->
+                                <td>
+
+                                    <div class="product-actions">
+
+                                        <a asp-area="Admin"
+                                           asp-controller="Products"
+                                           asp-action="Details"
+                                           asp-route-id="@product.ProductId"
+                                           class="action-btn view-btn"
+                                           title="View">
+
+                                            <i class="bi bi-eye"></i>
+
+                                        </a>
+
+
+                                        <a asp-area="Admin"
+                                           asp-controller="Products"
+                                           asp-action="Edit"
+                                           asp-route-id="@product.ProductId"
+                                           class="action-btn edit-btn"
+                                           title="Edit">
+
+                                            <i class="bi bi-pencil"></i>
+
+                                        </a>
+
+
+                                        <a asp-area="Admin"
+                                           asp-controller="Products"
+                                           asp-action="Delete"
+                                           asp-route-id="@product.ProductId"
+                                           class="action-btn delete-btn"
+                                           title="Delete">
+
+                                            <i class="bi bi-trash3"></i>
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+
+        const searchInput =
+            document.getElementById("productSearch");
+
+        if (searchInput) {
+
+            searchInput.addEventListener("keyup", function () {
+
+                const searchValue =
+                    this.value.toLowerCase();
+
+                const rows =
+                    document.querySelectorAll("#productsTable tr");
+
+                rows.forEach(row => {
+
+                    const text =
+                        row.textContent.toLowerCase();
+
+                    row.style.display =
+                        text.includes(searchValue)
+                            ? ""
+                            : "none";
+
+                });
+
+            });
+
+        }
+
+    </script>
+
+}

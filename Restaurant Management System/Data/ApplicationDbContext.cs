@@ -85,7 +85,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Burgers",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "classic_burger.jpg"
+                    ImageFileName = "classic_burger.png"
                 },
                 new Product
                 {
@@ -96,7 +96,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Burgers",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "chicken_burger.jpg"
+                    ImageFileName = "chicken_burger.png"
                 },
                 new Product
                 {
@@ -107,7 +107,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Burgers",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "double_beef_burger.jpg"
+                    ImageFileName = "double_beef_burger.png"
                 },
                 new Product
                 {
@@ -118,7 +118,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Pizza",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "margherita_pizza.jpg"
+                    ImageFileName = "margherita_pizza.png"
                 },
                 new Product
                 {
@@ -129,7 +129,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Pizza",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "chicken_pizza.jpg"
+                    ImageFileName = "chicken_pizza.png"
                 },
                 new Product
                 {
@@ -140,7 +140,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Pizza",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "pepperoni_pizza.jpg"
+                    ImageFileName = "pepperoni_pizza.png"
                 },
                 new Product
                 {
@@ -151,7 +151,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Pasta",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "chicken_pasta.jpg"
+                    ImageFileName = "chicken_pasta.png"
                 },
                 new Product
                 {
@@ -162,7 +162,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Pasta",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "alfredo_pasta.jpg"
+                    ImageFileName = "alfredo_pasta.png"
                 },
                 new Product
                 {
@@ -173,7 +173,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Sandwiches",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "chicken_sandwich.jpg"
+                    ImageFileName = "chicken_sandwich.png"
                 },
                 new Product
                 {
@@ -184,7 +184,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Sandwiches",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "crispy_chicken_sandwich.jpg"
+                    ImageFileName = "crispy_chicken_sandwich.png"
                 },
                 new Product
                 {
@@ -195,7 +195,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Sides",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "french_fries.jpg"
+                    ImageFileName = "french_fries.png"
                 },
                 new Product
                 {
@@ -206,7 +206,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Sides",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "cheese_fries.jpg"
+                    ImageFileName = "cheese_fries.png"
                 },
                 new Product
                 {
@@ -217,7 +217,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Meals",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "chicken_meal.jpg"
+                    ImageFileName = "chicken_meal.png"
                 },
                 new Product
                 {
@@ -228,7 +228,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Meals",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "beef_meal.jpg"
+                    ImageFileName = "beef_meal.png"
                 },
                 new Product
                 {
@@ -239,7 +239,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Drinks",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "cola.jpg"
+                    ImageFileName = "cola.png"
                 },
                 new Product
                 {
@@ -250,7 +250,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Drinks",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "orange_juice.jpg"
+                    ImageFileName = "orange_juice.png"
                 },
                 new Product
                 {
@@ -261,7 +261,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Drinks",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "strawberry_juice.jpg"
+                    ImageFileName = "strawberry_juice.png"
                 },
                 new Product
                 {
@@ -272,7 +272,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Desserts",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "chocolate_cake.jpg"
+                    ImageFileName = "chocolate_cake.png"
                 },
                 new Product
                 {
@@ -283,7 +283,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Desserts",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "cheesecake.jpg"
+                    ImageFileName = "cheesecake.png"
                 },
                 new Product
                 {
@@ -294,7 +294,7 @@ namespace RestaurantManagementSystem.Data
                     Category = "Desserts",
                     IsAvailable = true,
                     AdminId = 1,
-                    ImageFileName = "ice_cream.jpg"
+                    ImageFileName = "ice_cream.png"
                 }
             );                  
                     

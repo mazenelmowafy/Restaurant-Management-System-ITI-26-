@@ -1,0 +1,386 @@
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - Restaurant Admin</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Admin CSS -->
+    <link rel="stylesheet"
+          href="~/css/admin.css"
+          asp-append-version="true" />
+
+</head>
+
+<body>
+
+    <div class="admin-wrapper">
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside class="admin-sidebar">
+
+            <!-- Brand -->
+
+            <div class="sidebar-brand">
+
+                <div class="brand-icon">
+                    <i class="bi bi-shop"></i>
+                </div>
+
+                <div class="brand-text">
+                    <span class="brand-title">Restaurant</span>
+                    <span class="brand-subtitle">ADMIN PANEL</span>
+                </div>
+
+            </div>
+
+
+            <!-- Navigation -->
+
+            <div class="sidebar-content">
+
+                <div class="menu-section">
+
+                    <span class="menu-title">
+                        MAIN MENU
+                    </span>
+
+                    <!-- Dashboard -->
+
+                    <a asp-area="Admin"
+                       asp-controller="Dashboard"
+                       asp-action="Index"
+                       class="sidebar-link @(currentController == "Dashboard" ? "active" : "")">
+
+                        <span class="sidebar-icon">
+                            <i class="bi bi-grid-1x2-fill"></i>
+                        </span>
+
+                        <span>Dashboard</span>
+
+                    </a>
+
+
+                    <!-- Products -->
+
+                    <a asp-area="Admin"
+                       asp-controller="Products"
+                       asp-action="Index"
+                       class="sidebar-link @(currentController == "Products" ? "active" : "")">
+
+                        <span class="sidebar-icon">
+                            <i class="bi bi-bag-fill"></i>
+                        </span>
+
+                        <span>Products</span>
+
+                    </a>
+
+
+                    <!-- Customers -->
+
+                    <a asp-area="Admin"
+                       asp-controller="Customers"
+                       asp-action="Index"
+                       class="sidebar-link @(currentController == "Customers" ? "active" : "")">
+
+                        <span class="sidebar-icon">
+                            <i class="bi bi-people-fill"></i>
+                        </span>
+
+                        <span>Customers</span>
+
+                    </a>
+
+                </div>
+
+
+                <div class="menu-section">
+
+                    <span class="menu-title">
+                        MANAGEMENT
+                    </span>
+
+
+                    <!-- Orders -->
+
+                    <a asp-area=""
+                       asp-controller="Orders"
+                       asp-action="Index"
+                       class="sidebar-link">
+
+                        <span class="sidebar-icon">
+                            <i class="bi bi-receipt-cutoff"></i>
+                        </span>
+
+                        <span>Orders</span>
+
+                    </a>
+
+
+                    <!-- Order Items -->
+
+                    <a asp-area=""
+                       asp-controller="OrderItems"
+                       asp-action="Index"
+                       class="sidebar-link">
+
+                        <span class="sidebar-icon">
+                            <i class="bi bi-list-check"></i>
+                        </span>
+
+                        <span>Order Items</span>
+
+                    </a>
+
+                </div>
+
+
+                <div class="menu-section">
+
+                    <span class="menu-title">
+                        SYSTEM
+                    </span>
+
+
+                    <a href="#" class="sidebar-link">
+
+                        <span class="sidebar-icon">
+                            <i class="bi bi-gear-fill"></i>
+                        </span>
+
+                        <span>Settings</span>
+
+                    </a>
+
+
+                    <a href="#" class="sidebar-link">
+
+                        <span class="sidebar-icon">
+                            <i class="bi bi-question-circle-fill"></i>
+                        </span>
+
+                        <span>Help Center</span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Sidebar Bottom -->
+
+            <div class="sidebar-bottom">
+
+                <div class="admin-mini-profile">
+
+                    <div class="profile-avatar">
+                        A
+                    </div>
+
+                    <div class="profile-info">
+
+                        <span class="profile-name">
+                            Administrator
+                        </span>
+
+                        <span class="profile-role">
+                            System Admin
+                        </span>
+
+                    </div>
+
+                    <button class="profile-menu">
+                        <i class="bi bi-three-dots"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ================= MAIN ================= -->
+
+        <main class="admin-main">
+
+
+            <!-- ================= TOPBAR ================= -->
+
+            <header class="admin-topbar">
+
+                <div class="topbar-left">
+
+                    <!-- Mobile menu -->
+
+                    <button class="mobile-menu-btn"
+                            id="sidebarToggle">
+
+                        <i class="bi bi-list"></i>
+
+                    </button>
+
+
+                    <div>
+
+                        <h5 class="page-title">
+                            @ViewData["Title"]
+                        </h5>
+
+                        <span class="page-subtitle">
+                            Manage your restaurant efficiently
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="topbar-right">
+
+
+                    <!-- Search -->
+
+                    <div class="admin-search">
+
+                        <i class="bi bi-search"></i>
+
+                        <input type="text"
+                               placeholder="Search..." />
+
+                        <span class="search-shortcut">
+                            Ctrl K
+                        </span>
+
+                    </div>
+
+
+                    <!-- Notifications -->
+
+                    <button class="topbar-icon-btn">
+
+                        <i class="bi bi-bell"></i>
+
+                        <span class="notification-dot"></span>
+
+                    </button>
+
+
+                    <!-- Divider -->
+
+                    <div class="topbar-divider"></div>
+
+
+                    <!-- Admin -->
+
+                    <div class="topbar-profile">
+
+                        <div class="topbar-avatar">
+                            A
+                        </div>
+
+                        <div class="topbar-user-info">
+
+                            <span class="topbar-user-name">
+                                Administrator
+                            </span>
+
+                            <span class="topbar-user-role">
+                                Admin
+                            </span>
+
+                        </div>
+
+                        <i class="bi bi-chevron-down profile-arrow"></i>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- ================= PAGE CONTENT ================= -->
+
+            <section class="admin-content">
+
+                @RenderBody()
+
+            </section>
+
+
+            <!-- ================= FOOTER ================= -->
+
+            <footer class="admin-footer">
+
+                <span>
+                    © 2026 Restaurant Management System
+                </span>
+
+                <span>
+                    Admin Panel
+                </span>
+
+            </footer>
+
+        </main>
+
+    </div>
+
+
+    <!-- Bootstrap JS -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <!-- Sidebar JS -->
+
+    <script>
+
+        const sidebarToggle =
+        document.getElementById("sidebarToggle");
+
+        const sidebar =
+        document.querySelector(".admin-sidebar");
+
+
+        if (sidebarToggle) {
+
+        sidebarToggle.addEventListener("click", function () {
+
+        sidebar.classList.toggle("show");
+
+        });
+
+        }
+
+    </script>
+
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+
+</html>
