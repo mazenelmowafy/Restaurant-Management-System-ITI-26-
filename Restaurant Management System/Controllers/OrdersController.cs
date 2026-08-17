@@ -1,160 +1,183 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RestaurantManagementSystem.Data;
-using RestaurantManagementSystem.Models;
+using RestaurantManagementSystem.ViewModels;
 
 namespace RestaurantManagementSystem.Controllers
 {
     public class OrdersController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public OrdersController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
-            using var context = new ApplicationDbContext();
-            var orders = context.Orders
-                .Include(o => o.Customer)
+            var customerId =
+                HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
+            {
+                return RedirectToAction(
+                    "Login",
+                    "Account"
+                );
+            }
+
+            var orders = _context.Orders
+                .Where(o =>
+                    o.CustomerId == customerId.Value &&
+                    o.Status != "Cart")
                 .OrderByDescending(o => o.OrderDate)
                 .ToList();
 
             return View(orders);
         }
 
-        public IActionResult Details(int? id)
-        {
-            if (id == null) return NotFound();
-
-            using var context = new ApplicationDbContext();
-            var order = context.Orders
-                .Include(o => o.Customer)
-                .Include(o => o.OrderItems)
-                    .ThenInclude(oi => oi.Product)
-                .FirstOrDefault(o => o.OrderId == id);
-
-            if (order == null) return NotFound();
-            return View(order);
-        }
-
         public IActionResult Create()
         {
-            using var context = new ApplicationDbContext();
-            LoadCustomers(context);
+            var customerId =
+                HttpContext.Session.GetInt32("CustomerId");
 
-            return View(new Order
+            if (customerId == null)
             {
-                OrderDate = DateTime.Now,
-                Status = "Pending"
-            });
+                return RedirectToAction(
+                    "Login",
+                    "Account"
+                );
+            }
+
+            var cart = _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(i => i.Product)
+                .FirstOrDefault(o =>
+                    o.CustomerId == customerId.Value &&
+                    o.Status == "Cart");
+
+
+            var model = new OrderViewModel
+            {
+                CustomerId = customerId.Value,
+
+                productIds = cart?.OrderItems
+                    .Select(i => i.ProductId)
+                    .ToList()
+                    ?? new List<int>(),
+
+                quantities = cart?.OrderItems
+                    .Select(i => i.Quantity)
+                    .ToList()
+                    ?? new List<int>()
+            };
+
+
+            ViewBag.Cart = cart;
+
+            return View(model);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("OrderDate,Status,TotalAmount,CustomerId")] Order order)
+        public IActionResult Create(OrderViewModel model)
         {
-            ModelState.Remove(nameof(Order.Customer));
-            ModelState.Remove(nameof(Order.OrderItems));
+            var customerId =
+                HttpContext.Session.GetInt32("CustomerId");
 
-            using var context = new ApplicationDbContext();
-
-            if (!context.Customers.Any(c => c.CustomerID == order.CustomerId))
-                ModelState.AddModelError(nameof(Order.CustomerId), "Please select a valid customer.");
-
-            if (!ModelState.IsValid)
+            if (customerId == null)
             {
-                LoadCustomers(context, order.CustomerId);
-                return View(order);
+                return RedirectToAction(
+                    "Login",
+                    "Account"
+                );
             }
 
-            context.Orders.Add(order);
-            context.SaveChanges();
-            return RedirectToAction(nameof(Index));
+
+            var cart = _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(i => i.Product)
+                .FirstOrDefault(o =>
+                    o.CustomerId == customerId.Value &&
+                    o.Status == "Cart");
+
+
+            if (cart == null)
+                return NotFound();
+
+
+            if (cart.OrderItems == null ||
+                cart.OrderItems.Count == 0)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Cart is empty"
+                );
+
+                ViewBag.Cart = cart;
+                return View(model);
+            }
+
+
+            decimal total = 0;
+
+
+            foreach (var item in cart.OrderItems)
+            {
+
+                item.UnitPrice = item.Product.Price;
+
+                item.SubTotal =
+                    item.Quantity * item.UnitPrice;
+
+                total += item.SubTotal;
+            }
+
+
+            cart.TotalAmount = total;
+            cart.OrderDate = DateTime.Now;
+            cart.Status = "Pending";
+
+
+            _context.SaveChanges();
+
+
+            return RedirectToAction(
+                nameof(Details),
+                new { id = cart.OrderId }
+            );
         }
 
-        public IActionResult Edit(int? id)
+
+        public IActionResult Details(int id)
         {
-            if (id == null) return NotFound();
+            var customerId =
+                HttpContext.Session.GetInt32("CustomerId");
 
-            using var context = new ApplicationDbContext();
-            var order = context.Orders.Find(id);
-            if (order == null) return NotFound();
+            if (customerId == null)
+            {
+                return RedirectToAction(
+                    "Login",
+                    "Account"
+                );
+            }
 
-            LoadCustomers(context, order.CustomerId);
+            var order = _context.Orders
+                .Include(o => o.OrderItems)
+                .ThenInclude(i => i.Product)
+                .FirstOrDefault(o =>
+                    o.OrderId == id &&
+                    o.CustomerId == customerId.Value &&
+                    o.Status != "Cart");
+
+
+            if (order == null)
+                return NotFound();
+
+
             return View(order);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("OrderId,OrderDate,Status,TotalAmount,CustomerId")] Order order)
-        {
-            if (id != order.OrderId) return NotFound();
-
-            ModelState.Remove(nameof(Order.Customer));
-            ModelState.Remove(nameof(Order.OrderItems));
-
-            using var context = new ApplicationDbContext();
-
-            if (!context.Customers.Any(c => c.CustomerID == order.CustomerId))
-                ModelState.AddModelError(nameof(Order.CustomerId), "Please select a valid customer.");
-
-            if (!ModelState.IsValid)
-            {
-                LoadCustomers(context, order.CustomerId);
-                return View(order);
-            }
-
-            var existingOrder = context.Orders.Find(id);
-            if (existingOrder == null) return NotFound();
-
-            existingOrder.OrderDate = order.OrderDate;
-            existingOrder.Status = order.Status;
-            existingOrder.TotalAmount = order.TotalAmount;
-            existingOrder.CustomerId = order.CustomerId;
-
-            context.SaveChanges();
-            return RedirectToAction(nameof(Index));
-        }
-
-        public IActionResult Delete(int? id)
-        {
-            if (id == null) return NotFound();
-
-            using var context = new ApplicationDbContext();
-            var order = context.Orders
-                .Include(o => o.Customer)
-                .FirstOrDefault(o => o.OrderId == id);
-
-            if (order == null) return NotFound();
-            return View(order);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            using var context = new ApplicationDbContext();
-            var order = context.Orders.Find(id);
-
-            if (order != null)
-            {
-                context.Orders.Remove(order);
-                context.SaveChanges();
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        private void LoadCustomers(ApplicationDbContext context, int? selectedId = null)
-        {
-            var customers = context.Customers
-                .OrderBy(c => c.FirstName)
-                .ThenBy(c => c.LastName)
-                .Select(c => new
-                {
-                    c.CustomerID,
-                    FullName = c.FirstName + " " + c.LastName
-                })
-                .ToList();
-
-            ViewBag.CustomerId = new SelectList(customers, "CustomerID", "FullName", selectedId);
         }
     }
 }

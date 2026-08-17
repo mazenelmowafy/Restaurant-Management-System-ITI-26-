@@ -1,0 +1,145 @@
+﻿@model RestaurantManagementSystem.Models.Customer
+
+@{
+    ViewData["Title"] = "Add Customer";
+}
+
+<div class="page-header">
+    <div>
+        <h1>Add Customer</h1>
+        <p>Create a new customer account.</p>
+    </div>
+
+    <a asp-action="Index" class="btn btn-light">
+        ← Back to Customers
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-4">
+
+        <form asp-action="Create" method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3"></div>
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FirstName" class="form-label">
+                        First Name
+                    </label>
+
+                    <input asp-for="FirstName"
+                           class="form-control"
+                           placeholder="Enter first name" />
+
+                    <span asp-validation-for="FirstName"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="LastName" class="form-label">
+                        Last Name
+                    </label>
+
+                    <input asp-for="LastName"
+                           class="form-control"
+                           placeholder="Enter last name" />
+
+                    <span asp-validation-for="LastName"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Email" class="form-label">
+                        Email
+                    </label>
+
+                    <input asp-for="Email"
+                           type="email"
+                           class="form-control"
+                           placeholder="customer@example.com" />
+
+                    <span asp-validation-for="Email"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Phone" class="form-label">
+                        Phone
+                    </label>
+
+                    <input asp-for="Phone"
+                           class="form-control"
+                           placeholder="Enter phone number" />
+
+                    <span asp-validation-for="Phone"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label asp-for="Street" class="form-label">
+                        Street
+                    </label>
+
+                    <input asp-for="Street"
+                           class="form-control"
+                           placeholder="Enter street address" />
+
+                    <span asp-validation-for="Street"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="City" class="form-label">
+                        City
+                    </label>
+
+                    <input asp-for="City"
+                           class="form-control"
+                           placeholder="Enter city" />
+
+                    <span asp-validation-for="City"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ZipCode" class="form-label">
+                        Zip Code
+                    </label>
+
+                    <input asp-for="ZipCode"
+                           class="form-control"
+                           placeholder="Enter zip code" />
+
+                    <span asp-validation-for="ZipCode"
+                          class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <hr class="my-4" />
+
+            <div class="d-flex justify-content-end gap-2">
+
+                <a asp-action="Index"
+                   class="btn btn-light">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    + Add Customer
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

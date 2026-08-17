@@ -1,0 +1,280 @@
+﻿@model IEnumerable<RestaurantManagementSystem.Models.Customer>
+
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<div class="customers-page">
+
+    <!-- Header -->
+    <div class="customers-header">
+
+        <div>
+            <h1>Customers</h1>
+            <p>Manage all restaurant customers.</p>
+        </div>
+
+        <a asp-area="Admin"
+           asp-controller="Customers"
+           asp-action="Create"
+           class="admin-primary-btn">
+
+            <i class="bi bi-plus-lg"></i>
+
+            Add Customer
+
+        </a>
+
+    </div>
+
+
+    <!-- Customers Card -->
+    <div class="customers-card">
+
+        <div class="customers-card-header">
+
+            <div>
+                <h2>All Customers</h2>
+
+                <span>
+                    @Model.Count() customers
+                </span>
+            </div>
+
+            <div class="customer-search">
+
+                <i class="bi bi-search"></i>
+
+                <input type="text"
+                       id="customerSearch"
+                       placeholder="Search customers..." />
+
+            </div>
+
+        </div>
+
+
+        @if (!Model.Any())
+        {
+            <div class="customers-empty">
+
+                <div class="empty-customer-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+
+                <h3>No customers found</h3>
+
+                <p>
+                    There are currently no customers in the system.
+                </p>
+
+                <a asp-area="Admin"
+                   asp-controller="Customers"
+                   asp-action="Create"
+                   class="admin-primary-btn">
+
+                    <i class="bi bi-plus-lg"></i>
+
+                    Add First Customer
+
+                </a>
+
+            </div>
+        }
+        else
+        {
+            <div class="customers-table-wrapper">
+
+                <table class="customers-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Customer</th>
+
+                            <th>Email</th>
+
+                            <th>Phone</th>
+
+                            <th>Location</th>
+
+                            <th>Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="customersTable">
+
+                        @foreach (var customer in Model)
+                        {
+                            <tr>
+
+                                <!-- Customer -->
+
+                                <td>
+
+                                    <div class="customer-info">
+
+                                        <div class="customer-table-avatar">
+
+                                            @customer.FirstName.Substring(0, 1)
+
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                @customer.FirstName
+                                                @customer.LastName
+                                            </strong>
+
+                                            <small>
+                                                #@customer.CustomerID
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- Email -->
+
+                                <td>
+
+                                    <span class="customer-email">
+
+                                        @customer.Email
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Phone -->
+
+                                <td>
+
+                                    @customer.Phone
+
+                                </td>
+
+
+                                <!-- Location -->
+
+                                <td>
+
+                                    <div class="location-info">
+
+                                        <span>
+                                            @customer.City
+                                        </span>
+
+                                        <small>
+                                            @customer.Street
+                                        </small>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- Actions -->
+
+                                <td>
+
+                                    <div class="customer-actions">
+
+                                        <a asp-area="Admin"
+                                           asp-controller="Customers"
+                                           asp-action="Details"
+                                           asp-route-id="@customer.CustomerID"
+                                           class="action-btn view-btn"
+                                           title="View">
+
+                                            <i class="bi bi-eye"></i>
+
+                                        </a>
+
+
+                                        <a asp-area="Admin"
+                                           asp-controller="Customers"
+                                           asp-action="Edit"
+                                           asp-route-id="@customer.CustomerID"
+                                           class="action-btn edit-btn"
+                                           title="Edit">
+
+                                            <i class="bi bi-pencil"></i>
+
+                                        </a>
+
+
+                                        <a asp-area="Admin"
+                                           asp-controller="Customers"
+                                           asp-action="Delete"
+                                           asp-route-id="@customer.CustomerID"
+                                           class="action-btn delete-btn"
+                                           title="Delete">
+
+                                            <i class="bi bi-trash3"></i>
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+
+    <script>
+
+        const searchInput =
+            document.getElementById("customerSearch");
+
+        if (searchInput) {
+
+            searchInput.addEventListener("keyup", function () {
+
+                const searchValue =
+                    this.value.toLowerCase();
+
+                const rows =
+                    document.querySelectorAll("#customersTable tr");
+
+                rows.forEach(row => {
+
+                    const text =
+                        row.textContent.toLowerCase();
+
+                    row.style.display =
+                        text.includes(searchValue)
+                            ? ""
+                            : "none";
+
+                });
+
+            });
+
+        }
+
+    </script>
+
+}

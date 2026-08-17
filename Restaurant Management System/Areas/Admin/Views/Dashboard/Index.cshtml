@@ -1,0 +1,325 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="dashboard-page">
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="dashboard-header">
+
+        <div>
+            <h1>Admin Dashboard</h1>
+
+            <p>
+                Welcome back, Administrator. Here's what's happening today.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- ================= STATISTICS ================= -->
+
+    <div class="dashboard-stats">
+
+
+        <!-- Customers -->
+
+        <a asp-area="Admin"
+           asp-controller="Customers"
+           asp-action="Index"
+           class="stat-card-link">
+
+            <div class="stat-card">
+
+                <div class="stat-card-top">
+
+                    <div class="stat-icon customers-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+
+                    <span class="stat-arrow">
+                        <i class="bi bi-arrow-up-right"></i>
+                    </span>
+
+                </div>
+
+                <div class="stat-label">
+                    Total Customers
+                </div>
+
+                <div class="stat-value">
+                    @ViewBag.TotalCustomers
+                </div>
+
+                <div class="stat-description">
+                    Registered customers
+                </div>
+
+            </div>
+
+        </a>
+
+
+        <!-- Products -->
+
+        <a asp-area="Admin"
+           asp-controller="Products"
+           asp-action="Index"
+           class="stat-card-link">
+
+            <div class="stat-card">
+
+                <div class="stat-card-top">
+
+                    <div class="stat-icon products-icon">
+                        <i class="bi bi-bag-fill"></i>
+                    </div>
+
+                    <span class="stat-arrow">
+                        <i class="bi bi-arrow-up-right"></i>
+                    </span>
+
+                </div>
+
+                <div class="stat-label">
+                    Total Products
+                </div>
+
+                <div class="stat-value">
+                    @ViewBag.TotalProducts
+                </div>
+
+                <div class="stat-description">
+                    Products in menu
+                </div>
+
+            </div>
+
+        </a>
+
+
+        <!-- Orders -->
+
+        <div class="stat-card-link">
+
+            <div class="stat-card">
+
+                <div class="stat-card-top">
+
+                    <div class="stat-icon orders-icon">
+                        <i class="bi bi-receipt-cutoff"></i>
+                    </div>
+
+                </div>
+
+                <div class="stat-label">
+                    Total Orders
+                </div>
+
+                <div class="stat-value">
+                    @ViewBag.TotalOrders
+                </div>
+
+                <div class="stat-description">
+                    Orders received
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Sales -->
+
+        <div class="stat-card-link">
+
+            <div class="stat-card">
+
+                <div class="stat-card-top">
+
+                    <div class="stat-icon sales-icon">
+                        <i class="bi bi-currency-dollar"></i>
+                    </div>
+
+                </div>
+
+                <div class="stat-label">
+                    Total Sales
+                </div>
+
+                <div class="stat-value">
+                    @ViewBag.TotalSales.ToString("N2")
+                </div>
+
+                <div class="stat-description">
+                    Total revenue
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= RECENT ORDERS ================= -->
+
+    <div class="dashboard-section">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    Recent Orders
+                </h2>
+
+                <p>
+                    The latest orders placed in your restaurant.
+                </p>
+
+            </div>
+
+            <a asp-area=""
+               asp-controller="Orders"
+               asp-action="Index"
+               class="view-all-btn">
+
+                View All
+
+                <i class="bi bi-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+
+        @if (ViewBag.RecentOrders.Count == 0)
+        {
+            <div class="empty-orders">
+
+                <div class="empty-icon">
+                    <i class="bi bi-receipt"></i>
+                </div>
+
+                <h3>No orders yet</h3>
+
+                <p>
+                    When customers place orders, they will appear here.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            <div class="orders-table-wrapper">
+
+                <table class="orders-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Order</th>
+
+                            <th>Customer</th>
+
+                            <th>Date</th>
+
+                            <th>Status</th>
+
+                            <th>Total</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var order in ViewBag.RecentOrders)
+                        {
+                            <tr>
+
+                                <td>
+
+                                    <span class="order-id">
+                                        #@order.OrderId
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="customer-cell">
+
+                                        <div class="customer-avatar">
+
+                                            @order.Customer.FirstName.Substring(0, 1)
+
+                                        </div>
+
+                                        <span>
+                                            @order.Customer.FirstName
+                                            @order.Customer.LastName
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="order-date">
+
+                                        @order.OrderDate.ToString("dd MMM yyyy")
+
+                                    </span>
+
+                                    <small>
+
+                                        @order.OrderDate.ToString("hh:mm tt")
+
+                                    </small>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="status-badge">
+
+                                        @order.Status
+
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+
+                                        @order.TotalAmount.ToString("N2")
+
+                                    </strong>
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+
+    </div>
+
+</div>
