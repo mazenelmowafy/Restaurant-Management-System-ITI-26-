@@ -1,63 +1,75 @@
 ﻿@model IEnumerable<RestaurantManagementSystem.Models.Order>
 
 @{
-    ViewData["Title"] = "Orders";
+    ViewData["Title"] = "My Orders";
 }
 
-<h1>Orders</h1>
+<div class="container mt-5">
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Order</a>
-</p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>My Orders</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Order ID</th>
-            <th>Order Date</th>
-            <th>Customer</th>
-            <th>Status</th>
-            <th>Total Amount</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+        <a asp-controller="Products"
+           asp-action="Index"
+           class="btn btn-primary">
+            Continue Shopping
+        </a>
+    </div>
 
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @item.OrderId
-                </td>
-                <td>
-                    @item.OrderDate
-                </td>
-                <td>
-                    @item.Customer?.FirstName @item.Customer?.LastName
-                </td>
-                <td>
-                    @item.Status
-                </td>
-                <td>
-                    @item.TotalAmount
-                </td>
-                <td>
-                    <a asp-action="Edit"
-                       asp-route-id="@item.OrderId">
-                        Edit
-                    </a>
-                    |
-                    <a asp-action="Details"
-                       asp-route-id="@item.OrderId">
-                        Details
-                    </a>
-                    |
-                    <a asp-action="Delete"
-                       asp-route-id="@item.OrderId">
-                        Delete
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            You don't have any orders yet.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Total Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>@order.OrderId</td>
+
+                            <td>
+                                @order.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+
+                            <td>
+                                <span class="badge bg-primary">
+                                    @order.Status
+                                </span>
+                            </td>
+
+                            <td>
+                                @order.TotalAmount.ToString("C")
+                            </td>
+
+                            <td>
+                                <a asp-action="Details"
+                                   asp-route-id="@order.OrderId"
+                                   class="btn btn-sm btn-outline-primary">
+                                    Details
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    }
+
+</div>
