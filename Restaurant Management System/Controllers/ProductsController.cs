@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using RestaurantManagementSystem.Data;
 using RestaurantManagementSystem.Models;
 
@@ -18,20 +16,18 @@ namespace RestaurantManagementSystem.Controllers
         public IActionResult Index()
         {
             var products = _context.Products
-                .Include(p => p.Admin)
+                .Where(p => p.IsAvailable)
                 .ToList();
 
             return View(products);
         }
 
-        public IActionResult Details(int? id)
+        public IActionResult Details(int id)
         {
-            if (id == null)
-                return NotFound();
-
             var product = _context.Products
-                .Include(p => p.Admin)
-                .FirstOrDefault(p => p.ProductId == id);
+                .FirstOrDefault(p =>
+                    p.ProductId == id &&
+                    p.IsAvailable);
 
             if (product == null)
                 return NotFound();
@@ -39,144 +35,99 @@ namespace RestaurantManagementSystem.Controllers
             return View(product);
         }
 
-        public IActionResult Create()
-        {
-            LoadAdmins();
-
-            return View();
-        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(
-            [Bind("Name,Description,IsAvailable,Price,Category,AdminId")]
-            Product product)
+        public IActionResult AddToCart(int productId, int quantity = 1)
         {
-            ModelState.Remove(nameof(Product.Admin));
 
-            if (!_context.Admins.Any(a => a.AdminId == product.AdminId))
+            var customerId =
+                HttpContext.Session.GetInt32("CustomerId");
+
+            if (customerId == null)
             {
-                ModelState.AddModelError(
-                    nameof(Product.AdminId),
-                    "Please select a valid admin.");
+                return RedirectToAction(
+                    "Login",
+                    "Account"
+                );
             }
 
-            if (!ModelState.IsValid)
-            {
-                LoadAdmins(product.AdminId);
-                return View(product);
-            }
 
-            _context.Products.Add(product);
-            _context.SaveChanges();
+            if (quantity <= 0)
+                quantity = 1;
 
-            return RedirectToAction(nameof(Index));
-        }
-
-        public IActionResult Edit(int? id)
-        {
-            if (id == null)
-                return NotFound();
-
-            var product = _context.Products.Find(id);
-
-            if (product == null)
-                return NotFound();
-
-            LoadAdmins(product.AdminId);
-
-            return View(product);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(
-            int id,
-            [Bind("ProductId,Name,Description,IsAvailable,Price,Category,AdminId")]
-            Product product)
-        {
-            if (id != product.ProductId)
-                return NotFound();
-
-            ModelState.Remove(nameof(Product.Admin));
-
-            if (!_context.Admins.Any(a => a.AdminId == product.AdminId))
-            {
-                ModelState.AddModelError(
-                    nameof(Product.AdminId),
-                    "Please select a valid admin.");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                LoadAdmins(product.AdminId);
-                return View(product);
-            }
-
-            var existingProduct = _context.Products.Find(id);
-
-            if (existingProduct == null)
-                return NotFound();
-
-            existingProduct.Name = product.Name;
-            existingProduct.Description = product.Description;
-            existingProduct.IsAvailable = product.IsAvailable;
-            existingProduct.Price = product.Price;
-            existingProduct.Category = product.Category;
-            existingProduct.AdminId = product.AdminId;
-
-            _context.SaveChanges();
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        public IActionResult Delete(int? id)
-        {
-            if (id == null)
-                return NotFound();
 
             var product = _context.Products
-                .Include(p => p.Admin)
-                .FirstOrDefault(p => p.ProductId == id);
+                .FirstOrDefault(p =>
+                    p.ProductId == productId &&
+                    p.IsAvailable);
 
             if (product == null)
                 return NotFound();
 
-            return View(product);
-        }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            var product = _context.Products.Find(id);
+            var cart = _context.Orders
+                .FirstOrDefault(o =>
+                    o.CustomerId == customerId.Value &&
+                    o.Status == "Cart");
 
-            if (product != null)
+
+            if (cart == null)
             {
-                _context.Products.Remove(product);
+                cart = new Order
+                {
+                    CustomerId = customerId.Value,
+                    OrderDate = DateTime.Now,
+                    Status = "Cart",
+                    TotalAmount = 0
+                };
+
+                _context.Orders.Add(cart);
                 _context.SaveChanges();
             }
 
-            return RedirectToAction(nameof(Index));
-        }
 
-        private void LoadAdmins(int? selectedId = null)
-        {
-            var admins = _context.Admins
-                .OrderBy(a => a.FirstName)
-                .ThenBy(a => a.LastName)
-                .Select(a => new
+            var cartItem = _context.OrderItems
+                .FirstOrDefault(i =>
+                    i.OrderId == cart.OrderId &&
+                    i.ProductId == productId);
+
+
+            if (cartItem == null)
+            {
+                cartItem = new OrderItem
                 {
-                    a.AdminId,
-                    FullName = a.FirstName + " " + a.LastName
-                })
-                .ToList();
+                    OrderId = cart.OrderId,
+                    ProductId = product.ProductId,
+                    Quantity = quantity,
+                    UnitPrice = product.Price,
+                    SubTotal = product.Price * quantity
+                };
 
-            ViewBag.AdminId = new SelectList(
-                admins,
-                "AdminId",
-                "FullName",
-                selectedId);
+                _context.OrderItems.Add(cartItem);
+            }
+            else
+            {
+                cartItem.Quantity += quantity;
+
+                cartItem.UnitPrice = product.Price;
+
+                cartItem.SubTotal =
+                    cartItem.Quantity * product.Price;
+            }
+
+
+            _context.SaveChanges();
+
+
+            cart.TotalAmount = _context.OrderItems
+                .Where(i => i.OrderId == cart.OrderId)
+                .Sum(i => i.SubTotal);
+
+            _context.SaveChanges();
+
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
