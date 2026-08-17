@@ -4,75 +4,54 @@
     ViewData["Title"] = "Products";
 }
 
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Our Products</h1>
+<h1>Products</h1>
 
-        <a asp-controller="Orders"
-           asp-action="Create"
-           class="btn btn-outline-primary">
-            View Cart
-        </a>
-    </div>
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Product</a>
+</p>
 
-    <div class="row">
-        @foreach (var product in Model)
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Available</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Admin</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
         {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow-sm">
-
-                    @if (!string.IsNullOrEmpty(product.ImageFileName))
-                    {
-                        <img src="~/images/@product.ImageFileName"
-                             class="card-img-top"
-                             alt="@product.Name"
-                             style="height:220px; object-fit:cover;" />
-                    }
-
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">@product.Name</h5>
-
-                        <p class="text-muted">
-                            @product.Category
-                        </p>
-
-                        <p class="card-text">
-                            @product.Description
-                        </p>
-
-                        <h5 class="text-success mt-auto">
-                            @product.Price.ToString("C")
-                        </h5>
-
-                        <div class="mt-3">
-                            <a asp-action="Details"
-                               asp-route-id="@product.ProductId"
-                               class="btn btn-outline-primary">
-                                Details
-                            </a>
-
-                            <form asp-action="AddToCart"
-                                  method="post"
-                                  class="d-inline">
-                                @Html.AntiForgeryToken()
-
-                                <input type="hidden"
-                                       name="productId"
-                                       value="@product.ProductId" />
-
-                                <input type="hidden"
-                                       name="quantity"
-                                       value="1" />
-
-                                <button type="submit"
-                                        class="btn btn-success">
-                                    Add to Cart
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@item.IsAvailable</td>
+                <td>@item.Price</td>
+                <td>@item.Category</td>
+                <td>
+                    @item.Admin?.FirstName @item.Admin?.LastName
+                </td>
+                <td>
+                    <a asp-action="Edit"
+                       asp-route-id="@item.ProductId">
+                        Edit
+                    </a>
+                    |
+                    <a asp-action="Details"
+                       asp-route-id="@item.ProductId">
+                        Details
+                    </a>
+                    |
+                    <a asp-action="Delete"
+                       asp-route-id="@item.ProductId">
+                        Delete
+                    </a>
+                </td>
+            </tr>
         }
-    </div>
-</div>
+    </tbody>
+</table>

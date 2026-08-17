@@ -1,19 +1,21 @@
 ﻿@model RestaurantManagementSystem.Models.Order
 
 @{
-    ViewData["Title"] = "Create Order";
+    ViewData["Title"] = "Edit Order";
 }
 
-<h1>Create Order</h1>
+<h1>Edit Order</h1>
 
 <hr />
 
 <div class="row">
     <div class="col-md-6">
 
-        <form asp-action="Create" method="post">
+        <form asp-action="Edit" method="post">
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="OrderId" />
 
             <div class="form-group mb-3">
                 <label asp-for="OrderDate" class="control-label"></label>
@@ -50,7 +52,7 @@
 
             <div class="form-group">
                 <input type="submit"
-                       value="Create"
+                       value="Save"
                        class="btn btn-primary" />
 
                 <a asp-action="Index"

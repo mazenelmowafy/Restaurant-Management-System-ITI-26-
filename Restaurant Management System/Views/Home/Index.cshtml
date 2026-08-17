@@ -2,24 +2,28 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="container text-center mt-5">
-    <h1 class="display-4">Welcome to Our Restaurant</h1>
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
 
-    <p class="lead mt-3">
-        Discover our delicious meals and place your order easily.
-    </p>
+    <p>Welcome to Restaurant Management System</p>
 
     <div class="mt-4">
         <a asp-controller="Products"
            asp-action="Index"
-           class="btn btn-primary btn-lg">
-            View Products
+           class="btn btn-primary">
+            Products
         </a>
 
         <a asp-controller="Orders"
            asp-action="Index"
-           class="btn btn-outline-primary btn-lg ms-2">
-            My Orders
+           class="btn btn-success">
+            Orders
+        </a>
+
+        <a asp-controller="Customers"
+           asp-action="Index"
+           class="btn btn-info">
+            Customers
         </a>
     </div>
 </div>
