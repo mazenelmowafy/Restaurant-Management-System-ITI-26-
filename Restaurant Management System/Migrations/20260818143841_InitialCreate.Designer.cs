@@ -12,7 +12,7 @@ using RestaurantManagementSystem.Data;
 namespace Restaurant_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260817211234_InitialCreate")]
+    [Migration("20260818143841_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -85,10 +85,6 @@ namespace Restaurant_Management_System.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

@@ -25,6 +25,7 @@
 
             <div class="row">
 
+                <!-- الاسم الأول والاسم الأخير في نفس الصف -->
                 <div class="col-md-6 mb-3">
                     <label asp-for="FirstName" class="form-label">
                         First Name
@@ -35,19 +36,6 @@
                            placeholder="Enter first name" />
 
                     <span asp-validation-for="FirstName"
-                          class="text-danger"></span>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label asp-for="Password" class="form-label">
-                        Password
-                    </label>
-
-                    <input asp-for="Password"
-                           type="password"
-                           class="form-control"
-                           placeholder="Enter password" />
-
-                    <span asp-validation-for="Password"
                           class="text-danger"></span>
                 </div>
 
@@ -64,6 +52,7 @@
                           class="text-danger"></span>
                 </div>
 
+                <!-- الإيميل والهاتف في نفس الصف -->
                 <div class="col-md-6 mb-3">
                     <label asp-for="Email" class="form-label">
                         Email
@@ -91,6 +80,22 @@
                           class="text-danger"></span>
                 </div>
 
+                <!-- كلمة المرور -->
+                <div class="col-md-6 mb-3">
+                    <label asp-for="PasswordHash" class="form-label">
+                        Password
+                    </label>
+
+                    <input asp-for="PasswordHash"
+                           type="password"
+                           class="form-control"
+                           placeholder="Enter password" />
+
+                    <span asp-validation-for="PasswordHash"
+                          class="text-danger"></span>
+                </div>
+
+                <!-- العنوان تفصيلياً -->
                 <div class="col-12 mb-3">
                     <label asp-for="Street" class="form-label">
                         Street

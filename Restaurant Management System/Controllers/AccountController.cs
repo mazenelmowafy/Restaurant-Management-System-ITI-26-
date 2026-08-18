@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Restaurant_Management_System.ViewModels;
 using RestaurantManagementSystem.Data;
 using RestaurantManagementSystem.Models;
 using RestaurantManagementSystem.ViewModels;
+using System.Security.Claims;
 
 namespace RestaurantManagementSystem.Controllers
 {
@@ -16,7 +20,6 @@ namespace RestaurantManagementSystem.Controllers
         }
 
 
-
         public IActionResult Login()
         {
             return View();
@@ -26,64 +29,150 @@ namespace RestaurantManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
             string email = model.Email.Trim().ToLower();
 
+            // =========================
+            // Check Customer
+            // =========================
+
             var customer = _context.Customers
                 .FirstOrDefault(c => c.Email.ToLower() == email);
 
-            if (customer == null)
+            if (customer != null)
             {
-                ModelState.AddModelError(
-                    "",
-                    "Invalid email or password"
+                var passwordHasher = new PasswordHasher<Customer>();
+
+                var result = passwordHasher.VerifyHashedPassword(
+                    customer,
+                    customer.PasswordHash,
+                    model.Password
                 );
 
-                return View(model);
+                if (result != PasswordVerificationResult.Failed)
+                {
+                    var claims = new List<Claim>
+            {
+                new Claim(
+                    ClaimTypes.NameIdentifier,
+                    customer.CustomerID.ToString()
+                ),
+
+                new Claim(
+                    ClaimTypes.Name,
+                    customer.FirstName + " " + customer.LastName
+                ),
+
+                new Claim(
+                    ClaimTypes.Email,
+                    customer.Email
+                ),
+
+                new Claim(
+                    ClaimTypes.Role,
+                    "Customer"
+                )
+            };
+
+                    var identity = new ClaimsIdentity(
+                        claims,
+                        CookieAuthenticationDefaults.AuthenticationScheme
+                    );
+
+                    var principal = new ClaimsPrincipal(identity);
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        principal
+                    );
+
+                    return RedirectToAction(
+                        "Index",
+                        "Products"
+                    );
+                }
             }
 
 
-            var passwordHasher =
-                new PasswordHasher<Customer>();
+            // =========================
+            // Check Admin
+            // =========================
 
-            var result = passwordHasher.VerifyHashedPassword(
-                customer,
-                customer.Password,
-                model.Password
-            );
+            var admin = _context.Admins
+                .FirstOrDefault(a => a.Email.ToLower() == email);
 
-
-            if (result == PasswordVerificationResult.Failed)
+            if (admin != null)
             {
-                ModelState.AddModelError(
-                    "",
-                    "Invalid email or password"
+                var passwordHasher = new PasswordHasher<Admin>();
+
+                var result = passwordHasher.VerifyHashedPassword(
+                    admin,
+                    admin.PasswordHash,
+                    model.Password
                 );
 
-                return View(model);
+                if (result != PasswordVerificationResult.Failed)
+                {
+                    var claims = new List<Claim>
+            {
+                new Claim(
+                    ClaimTypes.NameIdentifier,
+                    admin.AdminId.ToString()
+                ),
+
+                new Claim(
+                    ClaimTypes.Name,
+                    admin.FirstName + " " + admin.LastName
+                ),
+
+                new Claim(
+                    ClaimTypes.Email,
+                    admin.Email
+                ),
+
+                new Claim(
+                    ClaimTypes.Role,
+                    "Admin"
+                )
+            };
+
+                    var identity = new ClaimsIdentity(
+                        claims,
+                        CookieAuthenticationDefaults.AuthenticationScheme
+                    );
+
+                    var principal = new ClaimsPrincipal(identity);
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        principal
+                    );
+
+                    return RedirectToAction(
+                        "Index",
+                        "Dashboard",
+                        new { area = "Admin" }
+                    );
+                }
             }
 
 
-            HttpContext.Session.SetInt32(
-                "CustomerId",
-                customer.CustomerID
+            // =========================
+            // Invalid Login
+            // =========================
+
+            ModelState.AddModelError(
+                "",
+                "Invalid email or password"
             );
 
-            HttpContext.Session.SetString(
-                "CustomerName",
-                customer.FirstName + " " + customer.LastName
-            );
-
-
-            return RedirectToAction(
-                "Index",
-                "Products"
-            );
+            return View(model);
         }
+
 
 
 
@@ -96,18 +185,17 @@ namespace RestaurantManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(Customer customer)
+        public async Task<IActionResult> Register(RegisterViewModel model) // 1. إضافة اسم المتغير 'model'
         {
             if (!ModelState.IsValid)
-                return View(customer);
+                return View(model); // 2. استخدام 'model' بدلاً من 'customer'
 
 
-            customer.Email =
-                customer.Email.Trim().ToLower();
+            model.Email = model.Email.Trim().ToLower(); // 3. استخدام 'model' بدلاً من 'customer'
 
 
             bool emailExists = _context.Customers
-                .Any(c => c.Email == customer.Email);
+                .Any(c => c.Email == model.Email); // 4. استخدام 'model' بدلاً من 'customer'
 
             if (emailExists)
             {
@@ -116,34 +204,52 @@ namespace RestaurantManagementSystem.Controllers
                     "Email already exists"
                 );
 
-                return View(customer);
+                return View(model); // 5. استخدام 'model' بدلاً من 'customer'
             }
 
 
-            var passwordHasher =
-                new PasswordHasher<Customer>();
+            var customer = new Customer
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                Phone = model.Phone,
+                Street = model.Street,
+                City = model.City,
+                ZipCode = model.ZipCode
+            };
 
-            customer.Password =
-                passwordHasher.HashPassword(
-                    customer,
-                    customer.Password
-                );
+            var passwordHasher = new PasswordHasher<Customer>();
+
+            customer.PasswordHash = passwordHasher.HashPassword(
+                customer,
+                model.Password
+            );
 
 
             _context.Customers.Add(customer);
             _context.SaveChanges();
 
 
-            HttpContext.Session.SetInt32(
-                "CustomerId",
-                customer.CustomerID
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.NameIdentifier, customer.CustomerID.ToString()),
+        new Claim(ClaimTypes.Name, customer.FirstName + " " + customer.LastName),
+        new Claim(ClaimTypes.Email, customer.Email),
+        new Claim(ClaimTypes.Role, "Customer")
+    };
+
+            var identity = new ClaimsIdentity(
+                claims,
+                CookieAuthenticationDefaults.AuthenticationScheme
             );
 
-            HttpContext.Session.SetString(
-                "CustomerName",
-                customer.FirstName + " " + customer.LastName
-            );
+            var principal = new ClaimsPrincipal(identity);
 
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal
+            );
 
             return RedirectToAction(
                 "Index",
@@ -151,10 +257,11 @@ namespace RestaurantManagementSystem.Controllers
             );
         }
 
-
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            HttpContext.Session.Clear();
+            await HttpContext.SignOutAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme
+            );
 
             return RedirectToAction(
                 "Login",

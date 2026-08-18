@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RestaurantManagementSystem.Data;
+using RestaurantManagementSystem.Models;
 
 namespace Restaurant_Management_System
 {
@@ -10,7 +12,7 @@ namespace Restaurant_Management_System
         {
             var builder = WebApplication.CreateBuilder(args);
 
-         
+
             var connectionString =
                 builder.Configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException(
@@ -22,8 +24,13 @@ namespace Restaurant_Management_System
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddControllersWithViews();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+            options.LoginPath = "/Account/Login";
+            options.AccessDeniedPath = "/Account/AccessDenied";
+            });
 
-         
             builder.Services.AddDistributedMemoryCache();
 
             builder.Services.AddSession(options =>
@@ -35,7 +42,7 @@ namespace Restaurant_Management_System
                 options.Cookie.IsEssential = true;
             });
 
-  
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -54,22 +61,25 @@ namespace Restaurant_Management_System
 
             app.UseRouting();
 
-            
             app.UseSession();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
-          
+
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
-        
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
+
+            
         }
     }
+
 }

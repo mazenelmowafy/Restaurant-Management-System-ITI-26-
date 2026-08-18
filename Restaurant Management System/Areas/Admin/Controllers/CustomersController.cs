@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity; // تمت إضافة هذه المكتبة للتشفير
 using RestaurantManagementSystem.Data;
 using RestaurantManagementSystem.Models;
 
@@ -16,24 +19,26 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
         }
 
         // GET: /Admin/Customers
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var customers = _context.Customers
+            var customers = await _context.Customers
+                .AsNoTracking()
                 .OrderBy(c => c.FirstName)
                 .ThenBy(c => c.LastName)
-                .ToList();
+                .ToListAsync();
 
             return View(customers);
         }
 
         // GET: /Admin/Customers/Details/5
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
                 return NotFound();
 
-            var customer = _context.Customers
-                .FirstOrDefault(c => c.CustomerID == id);
+            var customer = await _context.Customers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.CustomerID == id);
 
             if (customer == null)
                 return NotFound();
@@ -50,28 +55,34 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
         // POST: /Admin/Customers/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(
-            [Bind("FirstName,LastName,Email,Password,Phone,Street,City,ZipCode")]
-            Customer customer)
+        public async Task<IActionResult> Create(
+            [Bind("FirstName,LastName,Email,PasswordHash,Phone,Street,City,ZipCode")] Customer customer) // تم تعديل Password إلى PasswordHash
         {
             ModelState.Remove(nameof(Customer.Orders));
 
             if (!ModelState.IsValid)
                 return View(customer);
 
+            // تشفير كلمة المرور قبل الحفظ
+            if (!string.IsNullOrWhiteSpace(customer.PasswordHash))
+            {
+                var passwordHasher = new PasswordHasher<Customer>();
+                customer.PasswordHash = passwordHasher.HashPassword(customer, customer.PasswordHash);
+            }
+
             _context.Customers.Add(customer);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
 
         // GET: /Admin/Customers/Edit/5
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
                 return NotFound();
 
-            var customer = _context.Customers.Find(id);
+            var customer = await _context.Customers.FindAsync(id);
 
             if (customer == null)
                 return NotFound();
@@ -80,28 +91,27 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
         }
 
         // POST: /Admin/Customers/Edit/5
-        // POST: /Admin/Customers/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(
+        public async Task<IActionResult> Edit(
             int id,
-            [Bind("CustomerID,FirstName,LastName,Email,Phone,Street,City,ZipCode")] Customer customer)
+            [Bind("CustomerID,FirstName,LastName,Email,PasswordHash,Phone,Street,City,ZipCode")] Customer customer) // تم تعديل Password إلى PasswordHash
         {
             if (id != customer.CustomerID)
                 return NotFound();
 
             ModelState.Remove(nameof(Customer.Orders));
 
-            // Password is optional during Edit
-            if (string.IsNullOrWhiteSpace(customer.Password))
+            // جعل كلمة المرور اختيارية عند التعديل
+            if (string.IsNullOrWhiteSpace(customer.PasswordHash))
             {
-                ModelState.Remove(nameof(Customer.Password));
+                ModelState.Remove(nameof(Customer.PasswordHash));
             }
 
             if (!ModelState.IsValid)
                 return View(customer);
 
-            var existingCustomer = _context.Customers.Find(id);
+            var existingCustomer = await _context.Customers.FindAsync(id);
 
             if (existingCustomer == null)
                 return NotFound();
@@ -114,25 +124,37 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
             existingCustomer.City = customer.City;
             existingCustomer.ZipCode = customer.ZipCode;
 
-            // Update password only if a new password was entered
-            if (!string.IsNullOrWhiteSpace(customer.Password))
+            // تحديث وتشفير كلمة المرور فقط إذا تم إدخال كلمة مرور جديدة
+            if (!string.IsNullOrWhiteSpace(customer.PasswordHash))
             {
-                existingCustomer.Password = customer.Password;
+                var passwordHasher = new PasswordHasher<Customer>();
+                existingCustomer.PasswordHash = passwordHasher.HashPassword(existingCustomer, customer.PasswordHash);
             }
 
-            _context.SaveChanges();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CustomerExists(customer.CustomerID))
+                    return NotFound();
+                else
+                    throw;
+            }
 
             return RedirectToAction(nameof(Index));
         }
 
         // GET: /Admin/Customers/Delete/5
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
                 return NotFound();
 
-            var customer = _context.Customers
-                .FirstOrDefault(c => c.CustomerID == id);
+            var customer = await _context.Customers
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.CustomerID == id);
 
             if (customer == null)
                 return NotFound();
@@ -143,17 +165,22 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
         // POST: /Admin/Customers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var customer = _context.Customers.Find(id);
+            var customer = await _context.Customers.FindAsync(id);
 
             if (customer != null)
             {
                 _context.Customers.Remove(customer);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool CustomerExists(int id)
+        {
+            return _context.Customers.Any(e => e.CustomerID == id);
         }
     }
 }

@@ -64,6 +64,22 @@
                           class="text-danger"></span>
                 </div>
 
+                <div class="col-12 mb-3">
+                    <label asp-for="PasswordHash" class="form-label">
+                        New Password (Leave blank to keep current password)
+                    </label>
+
+                    <!-- قمنا بإضافة type="password" و value="" عن قصد -->
+                    <input asp-for="PasswordHash"
+                           type="password"
+                           value=""
+                           class="form-control"
+                           placeholder="Enter new password if you want to change it..." />
+
+                    <span asp-validation-for="PasswordHash"
+                          class="text-danger"></span>
+                </div>
+
                 <div class="col-md-6 mb-3">
                     <label asp-for="Phone" class="form-label">
                         Phone

@@ -1,4 +1,4 @@
-﻿@model RestaurantManagementSystem.Models.Customer
+﻿@model Restaurant_Management_System.ViewModels.RegisterViewModel
 
 @{
     ViewData["Title"] = "Register";
@@ -36,10 +36,19 @@
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" type="password" class="form-control" value="@Model?.Password" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Password" class="form-label"></label>
+                                <input asp-for="Password" type="password" class="form-control" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+
+                            <!-- تمت إضافة حقل تأكيد كلمة المرور ليتوافق مع الـ ViewModel الخاص بك -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ConfirmPassword" class="form-label"></label>
+                                <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -82,3 +91,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

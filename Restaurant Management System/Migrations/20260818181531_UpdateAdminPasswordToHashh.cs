@@ -5,18 +5,24 @@
 namespace Restaurant_Management_System.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class UpdateAdminPasswordToHashh : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.RenameColumn(
+                name: "Password",
+                table: "Admins",
+                newName: "PasswordHash");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.RenameColumn(
+                name: "PasswordHash",
+                table: "Admins",
+                newName: "Password");
         }
     }
 }

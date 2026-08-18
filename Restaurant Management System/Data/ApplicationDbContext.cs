@@ -9,7 +9,7 @@ namespace RestaurantManagementSystem.Data
         : base(options)
         {
         }
- 
+
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -70,7 +70,7 @@ namespace RestaurantManagementSystem.Data
                     FirstName = "Ahmed",
                     LastName = "Ali",
                     Email = "ahmed.admin@gmail.com",
-                    Password = "123456",
+                    PasswordHash = "123456",
                     
                 });
                  

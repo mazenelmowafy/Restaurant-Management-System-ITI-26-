@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization; // تمت الإضافة
+using Microsoft.AspNetCore.Mvc;
 using RestaurantManagementSystem.Data;
 using RestaurantManagementSystem.Models;
+using System.Security.Claims; // تمت الإضافة
 
 namespace RestaurantManagementSystem.Controllers
 {
@@ -13,6 +15,7 @@ namespace RestaurantManagementSystem.Controllers
             _context = context;
         }
 
+        // مفتوحة للجميع يشوفوا المنيو
         public IActionResult Index()
         {
             var products = _context.Products
@@ -22,6 +25,7 @@ namespace RestaurantManagementSystem.Controllers
             return View(products);
         }
 
+        // مفتوحة للجميع يشوفوا التفاصيل
         public IActionResult Details(int id)
         {
             var product = _context.Products
@@ -35,27 +39,17 @@ namespace RestaurantManagementSystem.Controllers
             return View(product);
         }
 
-
+        // محمية: لازم يكون مسجل دخول كـ Customer عشان يضيف للسلة
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Customer")]
         public IActionResult AddToCart(int productId, int quantity = 1)
         {
-
-            var customerId =
-                HttpContext.Session.GetInt32("CustomerId");
-
-            if (customerId == null)
-            {
-                return RedirectToAction(
-                    "Login",
-                    "Account"
-                );
-            }
-
+            // استخراج الـ ID الخاص بالعميل من الـ Claims بدلاً من السشن
+            int customerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             if (quantity <= 0)
                 quantity = 1;
-
 
             var product = _context.Products
                 .FirstOrDefault(p =>
@@ -65,18 +59,16 @@ namespace RestaurantManagementSystem.Controllers
             if (product == null)
                 return NotFound();
 
-
             var cart = _context.Orders
                 .FirstOrDefault(o =>
-                    o.CustomerId == customerId.Value &&
+                    o.CustomerId == customerId && // تم التعديل هنا
                     o.Status == "Cart");
-
 
             if (cart == null)
             {
                 cart = new Order
                 {
-                    CustomerId = customerId.Value,
+                    CustomerId = customerId, // تم التعديل هنا
                     OrderDate = DateTime.Now,
                     Status = "Cart",
                     TotalAmount = 0
@@ -86,12 +78,10 @@ namespace RestaurantManagementSystem.Controllers
                 _context.SaveChanges();
             }
 
-
             var cartItem = _context.OrderItems
                 .FirstOrDefault(i =>
                     i.OrderId == cart.OrderId &&
                     i.ProductId == productId);
-
 
             if (cartItem == null)
             {
@@ -109,23 +99,17 @@ namespace RestaurantManagementSystem.Controllers
             else
             {
                 cartItem.Quantity += quantity;
-
                 cartItem.UnitPrice = product.Price;
-
-                cartItem.SubTotal =
-                    cartItem.Quantity * product.Price;
+                cartItem.SubTotal = cartItem.Quantity * product.Price;
             }
 
-
             _context.SaveChanges();
-
 
             cart.TotalAmount = _context.OrderItems
                 .Where(i => i.OrderId == cart.OrderId)
                 .Sum(i => i.SubTotal);
 
             _context.SaveChanges();
-
 
             return RedirectToAction(nameof(Index));
         }
