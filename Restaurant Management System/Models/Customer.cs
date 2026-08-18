@@ -1,4 +1,6 @@
-﻿namespace RestaurantManagementSystem.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace RestaurantManagementSystem.Models
 {
     public class Customer
     {
@@ -6,6 +8,7 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        [NotMapped]
         public string Password { get; set; }
         public string Phone { get; set; }
         public string Street { get; set; }

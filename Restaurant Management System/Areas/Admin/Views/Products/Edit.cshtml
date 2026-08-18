@@ -2,85 +2,466 @@
 
 @{
     ViewData["Title"] = "Edit Product";
-    // Layout = "_AdminLayout"; // Point this to the real Admin layout once it exists
 }
 
-<h1>Edit Product</h1>
+<div class="products-page">
 
-<form asp-action="Edit" method="post" enctype="multipart/form-data">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="ProductId" />
-    <input type="hidden" asp-for="ImageFileName" />
+    <!-- ================= HEADER ================= -->
 
-    <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
+    <div class="products-header">
 
-    <div class="form-group">
-        <label asp-for="Description" class="control-label"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Price" class="control-label"></label>
-        <input asp-for="Price" class="form-control" />
-        <span asp-validation-for="Price" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Category" class="control-label"></label>
-        <input asp-for="Category" class="form-control" />
-        <span asp-validation-for="Category" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="AdminId" class="control-label"></label>
-        <select asp-for="AdminId" class="form-control" asp-items="ViewBag.AdminId">
-            <option value="">-- Select Admin --</option>
-        </select>
-        <span asp-validation-for="AdminId" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label">Current Image</label>
         <div>
-            @if (!string.IsNullOrEmpty(Model.ImageFileName))
-            {
-                <img src="~/images/products/@Model.ImageFileName" alt="@Model.Name" width="120" />
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" name="RemoveImage" id="RemoveImage" value="true" />
-                    <label class="form-check-label" for="RemoveImage">Remove current image</label>
-                </div>
-            }
-            else
-            {
-                <span class="text-muted">No image set</span>
-            }
+            <h1>Edit Product</h1>
+
+            <p>
+                Update product information and availability.
+            </p>
         </div>
+
+        <a asp-area="Admin"
+           asp-controller="Products"
+           asp-action="Index"
+           class="btn btn-light border">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Products
+
+        </a>
+
     </div>
 
-    <div class="form-group">
-        <label for="ImageFile" class="control-label">Replace Image</label>
-        <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept=".jpg,.jpeg,.png,.gif" />
-        <span asp-validation-for="ImageFileName" class="text-danger"></span>
-        <small class="form-text text-muted">Optional. Uploading a new image replaces the current one.</small>
+
+    <!-- ================= FORM CARD ================= -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white border-0 px-4 pt-4">
+
+            <h5 class="fw-bold mb-1">
+                Product Information
+            </h5>
+
+            <p class="text-muted mb-0">
+                Update the details of this product.
+            </p>
+
+        </div>
+
+
+        <div class="card-body px-4 py-4">
+
+            <form asp-area="Admin"
+                  asp-controller="Products"
+                  asp-action="Edit"
+                  asp-route-id="@Model.ProductId"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       asp-for="ProductId" />
+
+                <input type="hidden"
+                       asp-for="ImageFileName" />
+
+
+                <!-- Validation -->
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+
+                <div class="row g-4">
+
+
+                    <!-- Product Name -->
+
+                    <div class="col-md-8">
+
+                        <label asp-for="Name"
+                               class="form-label fw-semibold">
+
+                            Product Name
+
+                        </label>
+
+                        <input asp-for="Name"
+                               class="form-control"
+                               placeholder="Enter product name..." />
+
+                        <span asp-validation-for="Name"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- Price -->
+
+                    <div class="col-md-4">
+
+                        <label asp-for="Price"
+                               class="form-label fw-semibold">
+
+                            Price
+
+                        </label>
+
+                        <div class="input-group">
+
+                            <input asp-for="Price"
+                                   class="form-control"
+                                   type="number"
+                                   step="0.01"
+                                   min="0" />
+
+                            <span class="input-group-text">
+                                EGP
+                            </span>
+
+                        </div>
+
+                        <span asp-validation-for="Price"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- Category -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Category"
+                               class="form-label fw-semibold">
+
+                            Category
+
+                        </label>
+
+                        <input asp-for="Category"
+                               class="form-control"
+                               placeholder="e.g. Burger, Pizza, Drinks..." />
+
+                        <span asp-validation-for="Category"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- Admin -->
+
+                    <div class="col-md-6">
+
+                        <label asp-for="AdminId"
+                               class="form-label fw-semibold">
+
+                            Assigned Admin
+
+                        </label>
+
+                        <select asp-for="AdminId"
+                                asp-items="ViewBag.AdminId"
+                                class="form-select">
+
+                            <option value="">
+                                Select an admin
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="AdminId"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- Description -->
+
+                    <div class="col-12">
+
+                        <label asp-for="Description"
+                               class="form-label fw-semibold">
+
+                            Description
+
+                        </label>
+
+                        <textarea asp-for="Description"
+                                  class="form-control"
+                                  rows="5"
+                                  placeholder="Describe the product..."></textarea>
+
+                        <span asp-validation-for="Description"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <!-- Availability -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch mt-2">
+
+                            <input asp-for="IsAvailable"
+                                   class="form-check-input"
+                                   role="switch" />
+
+                            <label asp-for="IsAvailable"
+                                   class="form-check-label fw-semibold">
+
+                                Product is available
+
+                            </label>
+
+                        </div>
+
+                        <small class="text-muted">
+                            Customers can order this product when available.
+                        </small>
+
+                    </div>
+
+
+                    <!-- ================= CURRENT IMAGE ================= -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Current Image
+                        </label>
+
+                        @if (!string.IsNullOrEmpty(Model.ImageFileName))
+                        {
+                            <div class="mb-3">
+
+                                <img src="~/images/products/@Model.ImageFileName"
+                                     alt="@Model.Name"
+                                     id="currentImage"
+                                     style="
+                                width:180px;
+                                height:140px;
+                                object-fit:cover;
+                                border-radius:12px;
+                                border:1px solid #e1e5eb;
+                                " />
+
+                            </div>
+
+
+                            <div class="form-check">
+
+                                <input type="checkbox"
+                                       name="RemoveImage"
+                                       value="true"
+                                       class="form-check-input"
+                                       id="RemoveImage" />
+
+                                <label class="form-check-label"
+                                       for="RemoveImage">
+
+                                    Remove current image
+
+                                </label>
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-muted">
+                                <i class="bi bi-image me-1"></i>
+                                No image uploaded.
+                            </div>
+                        }
+
+                    </div>
+
+
+                    <!-- ================= NEW IMAGE ================= -->
+
+                    <div class="col-12">
+
+                        <label for="ImageFile"
+                               class="form-label fw-semibold">
+
+                            Replace Image
+
+                        </label>
+
+                        <input type="file"
+                               name="ImageFile"
+                               id="ImageFile"
+                               class="form-control"
+                               accept=".jpg,.jpeg,.png,.gif" />
+
+                        <div class="form-text">
+
+                            Upload a new image to replace the current one.
+                            JPG, JPEG, PNG or GIF — maximum 5 MB.
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Preview -->
+
+                    <div class="col-12">
+
+                        <div id="imagePreview"
+                             class="d-none">
+
+                            <p class="fw-semibold mb-2">
+                                New Image Preview
+                            </p>
+
+                            <img id="previewImage"
+                                 src="#"
+                                 alt="New Product Preview"
+                                 style="
+                            max-width:220px;
+                            max-height:180px;
+                            object-fit:cover;
+                            border-radius:12px;
+                            border:1px solid #e1e5eb;
+                            " />
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= ACTIONS ================= -->
+
+                <div class="border-top mt-4 pt-4 d-flex justify-content-end gap-2">
+
+                    <a asp-area="Admin"
+                       asp-controller="Products"
+                       asp-action="Index"
+                       class="btn btn-light border">
+
+                        Cancel
+
+                    </a>
+
+                    <button type="submit"
+                            class="admin-primary-btn">
+
+                        <i class="bi bi-check-lg me-1"></i>
+                        Save Changes
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
     </div>
 
-    <div class="form-group form-check">
-        <label class="form-check-label">
-            <input class="form-check-input" asp-for="IsAvailable" /> @Html.DisplayNameFor(model => model.IsAvailable)
-        </label>
-    </div>
+</div>
 
-    <div class="form-group">
-        <input type="submit" value="Save Changes" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">Back to Products</a>
-    </div>
-</form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+
+        const imageInput =
+            document.getElementById("ImageFile");
+
+        const previewContainer =
+            document.getElementById("imagePreview");
+
+        const previewImage =
+            document.getElementById("previewImage");
+
+        const removeImage =
+            document.getElementById("RemoveImage");
+
+
+        if (imageInput) {
+
+            imageInput.addEventListener("change", function () {
+
+                const file = this.files[0];
+
+                if (!file) {
+
+                    previewContainer.classList.add("d-none");
+
+                    previewImage.src = "#";
+
+                    return;
+                }
+
+
+                const allowedTypes = [
+                    "image/jpeg",
+                    "image/png",
+                    "image/gif"
+                ];
+
+
+                if (!allowedTypes.includes(file.type)) {
+
+                    previewContainer.classList.add("d-none");
+
+                    this.value = "";
+
+                    return;
+                }
+
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onload = function (event) {
+
+                    previewImage.src =
+                        event.target.result;
+
+                    previewContainer.classList.remove("d-none");
+
+                };
+
+
+                reader.readAsDataURL(file);
+
+            });
+
+        }
+
+
+        if (removeImage) {
+
+            removeImage.addEventListener("change", function () {
+
+                if (this.checked && imageInput) {
+
+                    imageInput.value = "";
+
+                    previewContainer.classList.add("d-none");
+
+                }
+
+            });
+
+        }
+
+    </script>
+
 }

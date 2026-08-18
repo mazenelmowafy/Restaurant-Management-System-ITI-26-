@@ -1,0 +1,250 @@
+﻿@model RestaurantManagementSystem.Models.Admin
+
+@{
+    ViewData["Title"] = "My Profile";
+
+    var initials =
+        $"{Model.FirstName?.FirstOrDefault()}{Model.LastName?.FirstOrDefault()}"
+        .ToUpper();
+}
+
+<div class="profile-page">
+
+    <!-- Header -->
+
+    <div class="profile-page-header">
+
+        <div>
+
+            <h1>My Profile</h1>
+
+            <p>
+                Manage your administrator profile information.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- Profile Card -->
+
+        <div class="col-lg-4">
+
+            <div class="profile-card">
+
+                <div class="profile-card-body">
+
+                    <div class="profile-large-avatar">
+                        @initials
+                    </div>
+
+
+                    <h2>
+                        @Model.FirstName @Model.LastName
+                    </h2>
+
+
+                    <span class="profile-role-badge">
+
+                        <i class="bi bi-shield-check"></i>
+
+                        System Administrator
+
+                    </span>
+
+
+                    <div class="profile-divider"></div>
+
+
+                    <div class="profile-meta">
+
+                        <div>
+
+                            <i class="bi bi-envelope"></i>
+
+                            <span>
+                                @Model.Email
+                            </span>
+
+                        </div>
+
+
+                        <div>
+
+                            <i class="bi bi-person-badge"></i>
+
+                            <span>
+                                Admin #@Model.AdminId
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Account Information -->
+
+        <div class="col-lg-8">
+
+            <div class="profile-info-card">
+
+                <div class="profile-info-header">
+
+                    <div>
+
+                        <h3>
+                            Account Information
+                        </h3>
+
+                        <p>
+                            Your administrator account details.
+                        </p>
+
+                    </div>
+
+                    <i class="bi bi-person-circle"></i>
+
+                </div>
+
+
+                <div class="profile-info-body">
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+
+                            <label>
+                                First Name
+                            </label>
+
+                            <div class="profile-input-display">
+                                @Model.FirstName
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label>
+                                Last Name
+                            </label>
+
+                            <div class="profile-input-display">
+                                @Model.LastName
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-12">
+
+                            <label>
+                                Email Address
+                            </label>
+
+                            <div class="profile-input-display">
+
+                                <i class="bi bi-envelope"></i>
+
+                                @Model.Email
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-12">
+
+                            <label>
+                                Role
+                            </label>
+
+                            <div class="profile-input-display">
+
+                                <i class="bi bi-shield-check"></i>
+
+                                System Administrator
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Security -->
+
+            <div class="profile-info-card mt-4">
+
+                <div class="profile-info-header">
+
+                    <div>
+
+                        <h3>
+                            Security
+                        </h3>
+
+                        <p>
+                            Manage your administrator account security.
+                        </p>
+
+                    </div>
+
+                    <i class="bi bi-shield-lock"></i>
+
+                </div>
+
+
+                <div class="profile-security-row">
+
+                    <div class="security-icon">
+
+                        <i class="bi bi-key"></i>
+
+                    </div>
+
+
+                    <div class="security-info">
+
+                        <strong>
+                            Password
+                        </strong>
+
+                        <span>
+                            Keep your administrator account secure.
+                        </span>
+
+                    </div>
+
+
+                    <button type="button"
+                            class="profile-secondary-btn"
+                            disabled>
+
+                        Change Password
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

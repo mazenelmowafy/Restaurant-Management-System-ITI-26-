@@ -51,7 +51,7 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(
-            [Bind("FirstName,LastName,Email,Phone,Street,City,ZipCode")]
+            [Bind("FirstName,LastName,Email,Password,Phone,Street,City,ZipCode")]
             Customer customer)
         {
             ModelState.Remove(nameof(Customer.Orders));
@@ -80,17 +80,23 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
         }
 
         // POST: /Admin/Customers/Edit/5
+        // POST: /Admin/Customers/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(
             int id,
-            [Bind("CustomerID,FirstName,LastName,Email,Phone,Street,City,ZipCode")]
-            Customer customer)
+            [Bind("CustomerID,FirstName,LastName,Email,Phone,Street,City,ZipCode")] Customer customer)
         {
             if (id != customer.CustomerID)
                 return NotFound();
 
             ModelState.Remove(nameof(Customer.Orders));
+
+            // Password is optional during Edit
+            if (string.IsNullOrWhiteSpace(customer.Password))
+            {
+                ModelState.Remove(nameof(Customer.Password));
+            }
 
             if (!ModelState.IsValid)
                 return View(customer);
@@ -107,6 +113,12 @@ namespace RestaurantManagementSystem.Areas.Admin.Controllers
             existingCustomer.Street = customer.Street;
             existingCustomer.City = customer.City;
             existingCustomer.ZipCode = customer.ZipCode;
+
+            // Update password only if a new password was entered
+            if (!string.IsNullOrWhiteSpace(customer.Password))
+            {
+                existingCustomer.Password = customer.Password;
+            }
 
             _context.SaveChanges();
 

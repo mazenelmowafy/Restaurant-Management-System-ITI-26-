@@ -37,6 +37,19 @@
                     <span asp-validation-for="FirstName"
                           class="text-danger"></span>
                 </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Password" class="form-label">
+                        Password
+                    </label>
+
+                    <input asp-for="Password"
+                           type="password"
+                           class="form-control"
+                           placeholder="Enter password" />
+
+                    <span asp-validation-for="Password"
+                          class="text-danger"></span>
+                </div>
 
                 <div class="col-md-6 mb-3">
                     <label asp-for="LastName" class="form-label">

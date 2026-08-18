@@ -121,11 +121,10 @@
 
 
                     <!-- Orders -->
-
-                    <a asp-area=""
-                       asp-controller="Orders"
-                       asp-action="Index"
-                       class="sidebar-link">
+                        <a asp-area="Admin"
+                        asp-controller="Orders"
+                        asp-action="Index"
+                        class="sidebar-link @(currentController == "Orders" ? "active" : "")">
 
                         <span class="sidebar-icon">
                             <i class="bi bi-receipt-cutoff"></i>
@@ -138,10 +137,10 @@
 
                     <!-- Order Items -->
 
-                    <a asp-area=""
+                    <a asp-area="Admin"
                        asp-controller="OrderItems"
                        asp-action="Index"
-                       class="sidebar-link">
+                       class="sidebar-link @(currentController == "OrderItems" ? "active" : "")">
 
                         <span class="sidebar-icon">
                             <i class="bi bi-list-check"></i>
@@ -161,7 +160,10 @@
                     </span>
 
 
-                    <a href="#" class="sidebar-link">
+                    <a asp-area="Admin"
+                       asp-controller="Settings"
+                       asp-action="Index"
+                       class="sidebar-link @(currentController == "Settings" ? "active" : "")">
 
                         <span class="sidebar-icon">
                             <i class="bi bi-gear-fill"></i>
@@ -172,7 +174,10 @@
                     </a>
 
 
-                    <a href="#" class="sidebar-link">
+                    <a asp-area="Admin"
+                       asp-controller="Help"
+                       asp-action="Index"
+                       class="sidebar-link @(currentController == "Help" ? "active" : "")">
 
                         <span class="sidebar-icon">
                             <i class="bi bi-question-circle-fill"></i>
@@ -187,37 +192,22 @@
             </div>
 
 
-            <!-- Sidebar Bottom -->
+            <!-- Logout -->
 
-            <div class="sidebar-bottom">
+            <a asp-area=""
+                asp-controller="Account"
+                asp-action="Logout"
+                class="admin-logout-btn">
 
-                <div class="admin-mini-profile">
+                <i class="bi bi-box-arrow-right"></i>
 
-                    <div class="profile-avatar">
-                        A
-                    </div>
+                <span>
+                    Logout
+                </span>
 
-                    <div class="profile-info">
+            </a>
 
-                        <span class="profile-name">
-                            Administrator
-                        </span>
-
-                        <span class="profile-role">
-                            System Admin
-                        </span>
-
-                    </div>
-
-                    <button class="profile-menu">
-                        <i class="bi bi-three-dots"></i>
-                    </button>
-
-                </div>
-
-            </div>
-
-        </aside>
+            </aside>
 
 
         <!-- ================= MAIN ================= -->
@@ -293,25 +283,115 @@
 
                     <!-- Admin -->
 
-                    <div class="topbar-profile">
+                    <div class="dropdown">
 
-                        <div class="topbar-avatar">
-                            A
-                        </div>
+                        <button class="topbar-profile"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false">
 
-                        <div class="topbar-user-info">
+                            <div class="topbar-avatar">
+                                A
+                            </div>
 
-                            <span class="topbar-user-name">
-                                Administrator
-                            </span>
+                            <div class="topbar-user-info">
 
-                            <span class="topbar-user-role">
-                                Admin
-                            </span>
+                                <span class="topbar-user-name">
+                                    Administrator
+                                </span>
 
-                        </div>
+                                <span class="topbar-user-role">
+                                    Admin
+                                </span>
 
-                        <i class="bi bi-chevron-down profile-arrow"></i>
+                            </div>
+
+                            <i class="bi bi-chevron-down profile-arrow"></i>
+
+                        </button>
+
+
+                        <ul class="dropdown-menu admin-profile-dropdown dropdown-menu-end">
+
+                            <li class="profile-dropdown-header">
+
+                                <div class="dropdown-avatar">
+                                    A
+                                </div>
+
+                                <div>
+                                    <strong>Administrator</strong>
+                                    <span>System Admin</span>
+                                </div>
+
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+
+                                <a class="dropdown-item"
+                                   asp-area="Admin"
+                                   asp-controller="Profile"
+                                   asp-action="Index">
+
+                                    <span class="dropdown-item-icon">
+                                        <i class="bi bi-person"></i>
+                                    </span>
+
+                                    <span>
+                                        Profile
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+                            <li>
+
+                                <a class="dropdown-item"
+                                   asp-area="Admin"
+                                   asp-controller="Settings"
+                                   asp-action="Index">
+
+                                    <span class="dropdown-item-icon">
+                                        <i class="bi bi-gear"></i>
+                                    </span>
+
+                                    <span>
+                                        Settings
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+
+                                <a class="dropdown-item logout-item"
+                                   asp-area=""
+                                   asp-controller="Account"
+                                   asp-action="Logout">
+
+                                    <span class="dropdown-item-icon">
+                                        <i class="bi bi-box-arrow-right"></i>
+                                    </span>
+
+                                    <span>
+                                        Logout
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+                        </ul>
 
                     </div>
 
