@@ -76,7 +76,17 @@ namespace Restaurant_Management_System
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
+            var hasher = new PasswordHasher<Admin>();
+
+            var admin = new Admin();
+
+            var hash = hasher.HashPassword(admin, "123456");
+
+            Console.WriteLine(hash);
+
             app.Run();
+
+
 
             
         }

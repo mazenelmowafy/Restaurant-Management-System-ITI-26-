@@ -70,7 +70,7 @@ namespace RestaurantManagementSystem.Data
                     FirstName = "Ahmed",
                     LastName = "Ali",
                     Email = "ahmed.admin@gmail.com",
-                    PasswordHash = "123456",
+                    PasswordHash = "AQAAAAIAAYagAAAAEK1cw2qTNWR41LfygMwWJRHTuaeElKrQLaEdV8AIf+aj2B8SSJ2RxUPXIoR9pZIPaA==",
                     
                 });
                  

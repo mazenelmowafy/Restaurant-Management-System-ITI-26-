@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestaurantManagementSystem.Data;
 
@@ -11,9 +12,11 @@ using RestaurantManagementSystem.Data;
 namespace Restaurant_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260819044912_FixAdminPasswordHash")]
+    partial class FixAdminPasswordHash
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,7 +60,7 @@ namespace Restaurant_Management_System.Migrations
                             Email = "ahmed.admin@gmail.com",
                             FirstName = "Ahmed",
                             LastName = "Ali",
-                            PasswordHash = "AQAAAAIAAYagAAAAEK1cw2qTNWR41LfygMwWJRHTuaeElKrQLaEdV8AIf+aj2B8SSJ2RxUPXIoR9pZIPaA=="
+                            PasswordHash = "AQAAAAEAAYagAAAAEIBBFlObCcUT4GE73GkFH4lWq6e0LaQfKhXlZhcVpAETHMIdgL6VySj+97d6wbntkQ=="
                         });
                 });
 
