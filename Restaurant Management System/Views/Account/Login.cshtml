@@ -1,44 +1,38 @@
-﻿@model RestaurantManagementSystem.ViewModels.LoginViewModel
+@model RestaurantManagementSystem.ViewModels.LoginViewModel
 
 @{
     ViewData["Title"] = "Login";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow">
-                <div class="card-body p-4">
-                    <h2 class="text-center mb-4">Login</h2>
+<div class="container rms-container">
+    <div class="rms-surface rms-auth-card">
+        <h2>Welcome Back</h2>
+        <p class="rms-auth-sub">Sign in to continue to R.</p>
 
-                    <form asp-action="Login" method="post">
-                        @Html.AntiForgeryToken()
+        <form asp-action="Login" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" type="password" class="form-control" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">
-                            Login
-                        </button>
-                    </form>
-
-                    <div class="text-center mt-3">
-                        <span>Don't have an account?</span>
-                        <a asp-controller="Account" asp-action="Register">Register</a>
-                    </div>
-                </div>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+
+            <div class="mb-4">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn-silver w-100">
+                Login
+            </button>
+        </form>
+
+        <div class="text-center mt-4" style="color:var(--rms-text-muted)">
+            <span>Don't have an account?</span>
+            <a asp-controller="Account" asp-action="Register">Register</a>
         </div>
     </div>
 </div>

@@ -1,82 +1,45 @@
-﻿@model RestaurantManagementSystem.ViewModels.PaymentViewModel
+@model RestaurantManagementSystem.ViewModels.PaymentViewModel
 
 @{
     ViewData["Title"] = "Payment";
 }
 
-<div class="container mt-5">
-
-    <div class="row justify-content-center">
-
-        <div class="col-md-6">
-
-            <div class="card shadow">
-
-                <div class="card-body p-4">
-
-                    <h2 class="text-center mb-4">
-                        Payment
-                    </h2>
-
-                    <div class="mb-3">
-                        <label class="form-label">
-                            Order ID
-                        </label>
-
-                        <input type="text"
-                               class="form-control"
-                               value="@Model.OrderId"
-                               readonly />
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label">
-                            Amount
-                        </label>
-
-                        <input type="text"
-                               class="form-control"
-                               value="@Model.Amount.ToString("C")"
-                               readonly />
-                    </div>
-
-                    <div class="mb-4">
-                        <label asp-for="PaymentMethod"
-                               class="form-label">
-                            Payment Method
-                        </label>
-
-                        <select asp-for="PaymentMethod"
-                                class="form-select">
-                            <option value="">Select Payment Method</option>
-                            <option value="Cash">Cash</option>
-                            <option value="Credit Card">Credit Card</option>
-                            <option value="Debit Card">Debit Card</option>
-                        </select>
-
-                        <span asp-validation-for="PaymentMethod"
-                              class="text-danger">
-                        </span>
-                    </div>
-
-                    <button type="button"
-                            class="btn btn-success w-100">
-                        Pay Now
-                    </button>
-
-                    <a asp-controller="Orders"
-                       asp-action="Details"
-                       asp-route-id="@Model.OrderId"
-                       class="btn btn-secondary w-100 mt-2">
-                        Back to Order
-                    </a>
-
-                </div>
-
+<div class="container rms-container">
+    <div class="rms-payment-card">
+        <div class="rms-payment-head">
+            <div>
+                <div class="rms-details-label">Secure Checkout</div>
+                <h2>Payment</h2>
+                <p>Choose your payment method and review your order total.</p>
             </div>
-
+            <div class="rms-payment-mark" aria-hidden="true">R</div>
         </div>
 
-    </div>
+        <div class="rms-payment-summary">
+            <div>
+                <span>Order</span>
+                <strong>#@Model.OrderId</strong>
+            </div>
+            <div class="text-end">
+                <span>Amount Due</span>
+                <strong>@Model.Amount.ToString("C")</strong>
+            </div>
+        </div>
 
+        <div class="rms-payment-field">
+            <label asp-for="PaymentMethod" class="form-label">Payment Method</label>
+            <select asp-for="PaymentMethod" class="form-select">
+                <option value="">Select Payment Method</option>
+                <option value="Cash">Cash</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Debit Card">Debit Card</option>
+            </select>
+            <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+        </div>
+
+        <div class="rms-payment-actions">
+            <button type="button" class="btn-silver">Pay Now</button>
+            <a asp-controller="Orders" asp-action="Details" asp-route-id="@Model.OrderId" class="btn btn-dark-elegant">Back to Order</a>
+        </div>
+    </div>
 </div>

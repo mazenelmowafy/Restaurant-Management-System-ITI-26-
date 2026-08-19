@@ -1,26 +1,23 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
-
-<ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
+﻿<ul class="navbar-nav ms-auto align-items-md-center gap-2">
+@if (User?.Identity?.IsAuthenticated == true)
 {
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+    <li class="nav-item d-flex align-items-center text-muted small me-md-1">
+        <span style="color:var(--rms-text-muted)">Welcome, <span style="color:var(--rms-silver-soft)">@User.Identity!.Name</span></span>
     </li>
     <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
+        <a class="rms-logout-btn" asp-area="" asp-controller="Account" asp-action="Logout">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 17l5-5-5-5M21 12H9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Logout
+        </a>
     </li>
 }
 else
 {
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        <a class="btn-outline-silver" style="padding:0.4rem 1.1rem; font-size:0.9rem; border-radius:6px; display:inline-block;" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
     </li>
 }
 </ul>

@@ -1,4 +1,4 @@
-﻿/* =====================================================
+/* =====================================================
    ADMIN PANEL
    ===================================================== */
 
@@ -2097,4 +2097,494 @@ body {
     color: #475569;
     font-size: 13px;
     font-weight: 600;
+}
+
+/* =====================================================
+   FINAL OVERRIDE — color palette matched to reference
+   ===================================================== */
+:root {
+    --admin-primary: #ff7a3d;
+    --admin-primary-dark: #ec6930;
+    --sidebar-bg: #0b1730;
+    --sidebar-hover: #122041;
+    --sidebar-text: #c7d0df;
+    --sidebar-active: #ffffff;
+    --body-bg: #f4f6fb;
+    --border-color: #e6eaf1;
+    --text-dark: #0f172a;
+    --text-muted: #7a8699;
+}
+
+body,
+.admin-content {
+    background: var(--body-bg) !important;
+    color: var(--text-dark) !important;
+}
+
+.admin-sidebar {
+    background: linear-gradient(180deg, #0c1832 0%, #091327 100%) !important;
+    box-shadow: 8px 0 24px rgba(9, 19, 39, 0.18);
+}
+
+.sidebar-brand {
+    border-bottom: 1px solid rgba(255,255,255,.06) !important;
+}
+
+.brand-icon {
+    background: linear-gradient(135deg, var(--admin-primary), #ff934d) !important;
+    box-shadow: 0 10px 24px rgba(255, 122, 61, 0.28) !important;
+}
+
+.brand-title,
+.profile-name,
+.topbar-user-name,
+.page-title,
+.dashboard-header h1,
+.section-header h2,
+.stat-value,
+.order-id {
+    color: #0f172a !important;
+}
+
+.brand-title { color: #ffffff !important; }
+.brand-subtitle,
+.menu-title,
+.profile-role,
+.page-subtitle,
+.dashboard-header p,
+.section-header p,
+.stat-label,
+.stat-description,
+.orders-table th,
+.orders-table td small,
+.topbar-user-role {
+    color: #93a0b5 !important;
+}
+
+.menu-title {
+    color: #6f7d96 !important;
+}
+
+.sidebar-link {
+    color: #d3daea !important;
+    border-radius: 12px !important;
+    margin-bottom: 6px !important;
+}
+
+.sidebar-link:hover {
+    color: #ffffff !important;
+    background: rgba(255,255,255,.06) !important;
+}
+
+.sidebar-link.active {
+    color: #ffffff !important;
+    background: linear-gradient(90deg, #ff7a3d 0%, #d85b2c 100%) !important;
+    box-shadow: 0 10px 22px rgba(255, 122, 61, 0.22) !important;
+}
+
+.admin-mini-profile {
+    background: rgba(255,255,255,.035) !important;
+    border: 1px solid rgba(255,255,255,.05);
+}
+
+.profile-avatar,
+.topbar-avatar,
+.dropdown-avatar {
+    background: linear-gradient(135deg, #ff7a3d, #ff934d) !important;
+    color: #ffffff !important;
+}
+
+.admin-main {
+    background: var(--body-bg) !important;
+}
+
+.admin-topbar,
+.admin-footer,
+.dashboard-section,
+.stat-card,
+.admin-search,
+.topbar-icon-btn,
+.admin-profile-dropdown {
+    background: #ffffff !important;
+    border-color: var(--border-color) !important;
+}
+
+.admin-topbar,
+.admin-footer {
+    box-shadow: none !important;
+}
+
+.admin-search {
+    background: #fbfbfc !important;
+}
+
+.search-shortcut {
+    background: #f1f3f7 !important;
+    color: #97a0af !important;
+}
+
+.topbar-icon-btn,
+.profile-menu,
+.profile-arrow,
+.stat-arrow {
+    color: #9ba6b5 !important;
+}
+
+.topbar-icon-btn:hover {
+    color: var(--admin-primary) !important;
+    background: #fff7f2 !important;
+}
+
+.notification-dot {
+    background: var(--admin-primary) !important;
+}
+
+.stat-card,
+.dashboard-section {
+    border-radius: 16px !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+}
+
+.stat-card-link:hover .stat-card {
+    border-color: #ffd5c5 !important;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08) !important;
+}
+
+.customers-icon {
+    background: #fff2ea !important;
+    color: #ff7a3d !important;
+}
+
+.products-icon {
+    background: #eef4ff !important;
+    color: #5f7eff !important;
+}
+
+.orders-icon {
+    background: #f1ecff !important;
+    color: #8a63ff !important;
+}
+
+.sales-icon {
+    background: #eaf8f0 !important;
+    color: #26a269 !important;
+}
+
+.dashboard-view-all,
+.view-all-btn {
+    color: #3b6ff2 !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+}
+
+.dashboard-view-all:hover,
+.view-all-btn:hover {
+    color: #2858ce !important;
+}
+
+.orders-table th {
+    background: #fbfbfd !important;
+    color: #7c8799 !important;
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+.orders-table td {
+    border-top: 1px solid #eef1f6 !important;
+    color: #0f172a !important;
+}
+
+.orders-table tbody tr:hover {
+    background: #fafbfe !important;
+}
+
+.customer-avatar {
+    background: #ff7a3d !important;
+    color: #ffffff !important;
+    border-radius: 12px !important;
+}
+
+.status-badge {
+    background: #fff2e6 !important;
+    color: #e08716 !important;
+}
+
+.empty-icon {
+    background: #f2f4f8 !important;
+    color: #97a0af !important;
+}
+
+.admin-logout-btn {
+    color: #ff7a3d !important;
+    background: rgba(255, 122, 61, 0.08) !important;
+    border: 1px solid rgba(255, 122, 61, 0.08) !important;
+    border-radius: 12px !important;
+}
+
+.admin-logout-btn:hover {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #ff7a3d, #e26531) !important;
+}
+
+.topbar-profile:hover,
+.topbar-profile:focus,
+.topbar-profile.show {
+    background: #f8fafc !important;
+}
+
+.admin-profile-dropdown .dropdown-item:hover {
+    background: #fff4ee !important;
+    color: #ff7a3d !important;
+}
+
+.admin-profile-dropdown .dropdown-item:hover .dropdown-item-icon {
+    background: #ffe7dc !important;
+    color: #ff7a3d !important;
+}
+
+
+/* =====================================================
+   EXACT REFERENCE COLOR LOCK — supplied screenshot
+   No structural changes
+   ===================================================== */
+:root {
+    --admin-primary: #FF7A3D;
+    --admin-primary-dark: #FF7A3D;
+    --sidebar-bg: #0B162E;
+    --sidebar-hover: #0C1832;
+    --body-bg: #F4F6FB;
+}
+
+.admin-sidebar {
+    background: linear-gradient(180deg, #0C1832 0%, #091328 100%) !important;
+}
+.sidebar-link.active,
+.brand-icon,
+.profile-avatar,
+.topbar-avatar,
+.dropdown-avatar {
+    background: #FF7A3D !important;
+}
+.sidebar-link.active {
+    background: linear-gradient(90deg, #FF7A3D 0%, #FF7A3D 100%) !important;
+}
+.admin-logout-btn { color: #FF7A3D !important; }
+.admin-logout-btn:hover { background: #FF7A3D !important; color: #FFFFFF !important; }
+.notification-dot { background: #FF7A3D !important; }
+
+
+/* =====================================================
+   FINAL OVERRIDE — slightly darker navy and orange
+   ===================================================== */
+:root {
+    --admin-primary: #E96D34;
+    --admin-primary-dark: #D9632D;
+    --sidebar-bg: #081225;
+}
+
+.admin-sidebar {
+    background: linear-gradient(180deg, #091429 0%, #07111f 100%) !important;
+}
+
+.brand-icon,
+.profile-avatar,
+.topbar-avatar,
+.dropdown-avatar,
+.notification-dot {
+    background: #E96D34 !important;
+}
+
+.sidebar-link.active {
+    background: linear-gradient(90deg, #E96D34 0%, #D9632D 100%) !important;
+    box-shadow: 0 10px 22px rgba(233, 109, 52, 0.22) !important;
+}
+
+.admin-logout-btn {
+    color: #E96D34 !important;
+    background: rgba(233, 109, 52, 0.08) !important;
+}
+
+.admin-logout-btn:hover {
+    background: #E96D34 !important;
+    color: #FFFFFF !important;
+}
+
+.customers-icon { color: #E96D34 !important; }
+.dashboard-view-all,
+.view-all-btn { color: #E96D34 !important; }
+.dashboard-view-all:hover,
+.view-all-btn:hover { color: #D9632D !important; }
+.status-badge {
+    color: #D17A15 !important;
+}
+
+
+/* =====================================================
+   FINAL OVERRIDE — extremely dark navy and darker orange
+   ===================================================== */
+:root {
+    --admin-primary: #C44E1D;
+    --admin-primary-dark: #A93F15;
+    --sidebar-bg: #030916;
+}
+
+.admin-sidebar {
+    background: linear-gradient(180deg, #040B18 0%, #020712 100%) !important;
+}
+
+.brand-icon,
+.profile-avatar,
+.topbar-avatar,
+.dropdown-avatar,
+.notification-dot {
+    background: #C44E1D !important;
+    box-shadow: 0 10px 24px rgba(196, 78, 29, 0.28) !important;
+}
+
+.sidebar-link.active {
+    background: linear-gradient(90deg, #C44E1D 0%, #A93F15 100%) !important;
+    box-shadow: 0 10px 22px rgba(196, 78, 29, 0.24) !important;
+}
+
+.admin-logout-btn {
+    color: #C44E1D !important;
+    background: rgba(196, 78, 29, 0.10) !important;
+}
+
+.admin-logout-btn:hover {
+    background: #C44E1D !important;
+    color: #FFFFFF !important;
+}
+
+.customers-icon { color: #C44E1D !important; }
+.dashboard-view-all,
+.view-all-btn { color: #C44E1D !important; }
+.dashboard-view-all:hover,
+.view-all-btn:hover { color: #A93F15 !important; }
+.status-badge {
+    background: #F7E6D8 !important;
+    color: #B65D17 !important;
+}
+
+
+/* =====================================================
+   FINAL RESTORE — exact colors from reference screenshot
+   ===================================================== */
+:root {
+    --admin-primary: #FF6B35;
+    --admin-primary-dark: #E85A2A;
+    --sidebar-bg: #111827;
+    --sidebar-hover: #1F2937;
+    --sidebar-text: #9CA3AF;
+    --sidebar-active: #FFFFFF;
+    --body-bg: #F5F7FB;
+    --border-color: #E5E7EB;
+    --text-dark: #111827;
+    --text-muted: #6B7280;
+}
+
+body,
+.admin-content,
+.admin-main {
+    background: #F5F7FB !important;
+    color: #111827 !important;
+}
+
+.admin-sidebar {
+    background: #111827 !important;
+    box-shadow: none !important;
+}
+
+.brand-icon,
+.profile-avatar,
+.topbar-avatar,
+.dropdown-avatar,
+.notification-dot {
+    background: #FF6B35 !important;
+}
+
+.sidebar-link.active {
+    background: linear-gradient(90deg, rgba(255,107,53,.95), rgba(255,107,53,.75)) !important;
+    box-shadow: 0 7px 18px rgba(255,107,53,.16) !important;
+}
+
+.sidebar-link:hover {
+    background: #1F2937 !important;
+}
+
+.admin-logout-btn {
+    color: #FF6B4A !important;
+    background: rgba(255,107,74,.08) !important;
+}
+
+.admin-logout-btn:hover {
+    color: #FFFFFF !important;
+    background: #FF6333 !important;
+}
+
+.admin-topbar,
+.admin-footer,
+.stat-card,
+.dashboard-section,
+.admin-profile-dropdown {
+    background: #FFFFFF !important;
+    border-color: #E5E7EB !important;
+}
+
+.admin-search {
+    background: #FAFAFA !important;
+    border-color: #E5E7EB !important;
+}
+
+.topbar-icon-btn,
+.mobile-menu-btn {
+    background: #FFFFFF !important;
+}
+
+.customers-icon {
+    background: #FFF1EB !important;
+    color: #FF6B35 !important;
+}
+
+.products-icon {
+    background: #EEF4FF !important;
+    color: #4F7CFF !important;
+}
+
+.orders-icon {
+    background: #F3EFFF !important;
+    color: #7C5CFF !important;
+}
+
+.sales-icon {
+    background: #EAFAF1 !important;
+    color: #22A06B !important;
+}
+
+.stat-card-link:hover .stat-card {
+    border-color: #FF6B35 !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,.08) !important;
+}
+
+.orders-table th {
+    background: #FAFAFA !important;
+    color: #6B7280 !important;
+}
+
+.orders-table tbody tr:hover {
+    background: #FAFAFA !important;
+}
+
+.customer-avatar {
+    background: #FF6B35 !important;
+    color: #FFFFFF !important;
+}
+
+.status-badge {
+    background: #FFF5E9 !important;
+    color: #D97706 !important;
+}
+
+.dashboard-view-all,
+.view-all-btn {
+    color: #2563EB !important;
 }

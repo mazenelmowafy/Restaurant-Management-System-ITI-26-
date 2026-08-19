@@ -1,24 +1,27 @@
-﻿@{
+@{
     ViewData["Title"] = "About";
 }
 
-<div class="container mt-5">
-    <div class="text-center">
-        <h1>About Us</h1>
-
-        <p class="lead mt-4">
-            Welcome to our restaurant management system.
-        </p>
-
-        <p>
-            Browse our products, add your favorite meals to your cart,
-            and place your orders easily.
-        </p>
-
-        <a asp-controller="Products"
-           asp-action="Index"
-           class="btn btn-primary mt-3">
-            Browse Products
-        </a>
+<div class="container rms-container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="rms-surface p-5 text-center">
+                <div class="rms-kicker" style="color:var(--rms-silver); text-transform:uppercase; letter-spacing:3px; font-size:0.8rem; margin-bottom:0.75rem;">Our Story</div>
+                <h1 class="mb-3">About R</h1>
+                <hr class="rms-divider" />
+                <p class="lead" style="color:var(--rms-text-muted)">
+                    R is a modern restaurant management experience &mdash;
+                    built to make browsing, ordering, and tracking your meals feel as
+                    refined as the dishes themselves.
+                </p>
+                <p class="text-muted">
+                    Browse our menu, add your favorite dishes to your order, and follow
+                    it every step of the way, all from one elegant dashboard.
+                </p>
+                <a asp-controller="Products" asp-action="Index" class="btn-silver mt-3">
+                    Browse the Menu
+                </a>
+            </div>
+        </div>
     </div>
 </div>
