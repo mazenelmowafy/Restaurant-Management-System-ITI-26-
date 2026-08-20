@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant_Management_System.ViewModels;
@@ -20,12 +21,39 @@ namespace RestaurantManagementSystem.Controllers
         }
 
 
+        // =========================================
+        // PROFILE
+        // =========================================
+
+        [Authorize(Roles = "Customer")]
+        public IActionResult Profile()
+        {
+            int customerId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var customer = _context.Customers
+                .FirstOrDefault(c => c.CustomerID == customerId);
+
+            if (customer == null)
+                return NotFound();
+
+            return View(customer);
+        }
+
+
+        // =========================================
+        // LOGIN - GET
+        // =========================================
+
         public IActionResult Login()
         {
             return View();
         }
 
 
+        // =========================================
+        // LOGIN - POST
+        // =========================================
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -36,9 +64,10 @@ namespace RestaurantManagementSystem.Controllers
 
             string email = model.Email.Trim().ToLower();
 
-            // =========================
-            // Check Customer
-            // =========================
+
+            // =========================================
+            // CHECK CUSTOMER
+            // =========================================
 
             var customer = _context.Customers
                 .FirstOrDefault(c => c.Email.ToLower() == email);
@@ -56,27 +85,27 @@ namespace RestaurantManagementSystem.Controllers
                 if (result != PasswordVerificationResult.Failed)
                 {
                     var claims = new List<Claim>
-            {
-                new Claim(
-                    ClaimTypes.NameIdentifier,
-                    customer.CustomerID.ToString()
-                ),
+                    {
+                        new Claim(
+                            ClaimTypes.NameIdentifier,
+                            customer.CustomerID.ToString()
+                        ),
 
-                new Claim(
-                    ClaimTypes.Name,
-                    customer.FirstName + " " + customer.LastName
-                ),
+                        new Claim(
+                            ClaimTypes.Name,
+                            customer.FirstName + " " + customer.LastName
+                        ),
 
-                new Claim(
-                    ClaimTypes.Email,
-                    customer.Email
-                ),
+                        new Claim(
+                            ClaimTypes.Email,
+                            customer.Email
+                        ),
 
-                new Claim(
-                    ClaimTypes.Role,
-                    "Customer"
-                )
-            };
+                        new Claim(
+                            ClaimTypes.Role,
+                            "Customer"
+                        )
+                    };
 
                     var identity = new ClaimsIdentity(
                         claims,
@@ -98,9 +127,9 @@ namespace RestaurantManagementSystem.Controllers
             }
 
 
-            // =========================
-            // Check Admin
-            // =========================
+            // =========================================
+            // CHECK ADMIN
+            // =========================================
 
             var admin = _context.Admins
                 .FirstOrDefault(a => a.Email.ToLower() == email);
@@ -118,27 +147,27 @@ namespace RestaurantManagementSystem.Controllers
                 if (result != PasswordVerificationResult.Failed)
                 {
                     var claims = new List<Claim>
-            {
-                new Claim(
-                    ClaimTypes.NameIdentifier,
-                    admin.AdminId.ToString()
-                ),
+                    {
+                        new Claim(
+                            ClaimTypes.NameIdentifier,
+                            admin.AdminId.ToString()
+                        ),
 
-                new Claim(
-                    ClaimTypes.Name,
-                    admin.FirstName + " " + admin.LastName
-                ),
+                        new Claim(
+                            ClaimTypes.Name,
+                            admin.FirstName + " " + admin.LastName
+                        ),
 
-                new Claim(
-                    ClaimTypes.Email,
-                    admin.Email
-                ),
+                        new Claim(
+                            ClaimTypes.Email,
+                            admin.Email
+                        ),
 
-                new Claim(
-                    ClaimTypes.Role,
-                    "Admin"
-                )
-            };
+                        new Claim(
+                            ClaimTypes.Role,
+                            "Admin"
+                        )
+                    };
 
                     var identity = new ClaimsIdentity(
                         claims,
@@ -161,9 +190,9 @@ namespace RestaurantManagementSystem.Controllers
             }
 
 
-            // =========================
-            // Invalid Login
-            // =========================
+            // =========================================
+            // INVALID LOGIN
+            // =========================================
 
             ModelState.AddModelError(
                 "",
@@ -174,7 +203,9 @@ namespace RestaurantManagementSystem.Controllers
         }
 
 
-
+        // =========================================
+        // REGISTER - GET
+        // =========================================
 
         public IActionResult Register()
         {
@@ -182,20 +213,23 @@ namespace RestaurantManagementSystem.Controllers
         }
 
 
+        // =========================================
+        // REGISTER - POST
+        // =========================================
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model) // 1. إضافة اسم المتغير 'model'
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
-                return View(model); // 2. استخدام 'model' بدلاً من 'customer'
+                return View(model);
 
 
-            model.Email = model.Email.Trim().ToLower(); // 3. استخدام 'model' بدلاً من 'customer'
+            model.Email = model.Email.Trim().ToLower();
 
 
             bool emailExists = _context.Customers
-                .Any(c => c.Email == model.Email); // 4. استخدام 'model' بدلاً من 'customer'
+                .Any(c => c.Email == model.Email);
 
             if (emailExists)
             {
@@ -204,7 +238,7 @@ namespace RestaurantManagementSystem.Controllers
                     "Email already exists"
                 );
 
-                return View(model); // 5. استخدام 'model' بدلاً من 'customer'
+                return View(model);
             }
 
 
@@ -219,6 +253,7 @@ namespace RestaurantManagementSystem.Controllers
                 ZipCode = model.ZipCode
             };
 
+
             var passwordHasher = new PasswordHasher<Customer>();
 
             customer.PasswordHash = passwordHasher.HashPassword(
@@ -228,16 +263,37 @@ namespace RestaurantManagementSystem.Controllers
 
 
             _context.Customers.Add(customer);
+
             _context.SaveChanges();
 
 
+            // =========================================
+            // CREATE CUSTOMER CLAIMS
+            // =========================================
+
             var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.NameIdentifier, customer.CustomerID.ToString()),
-        new Claim(ClaimTypes.Name, customer.FirstName + " " + customer.LastName),
-        new Claim(ClaimTypes.Email, customer.Email),
-        new Claim(ClaimTypes.Role, "Customer")
-    };
+            {
+                new Claim(
+                    ClaimTypes.NameIdentifier,
+                    customer.CustomerID.ToString()
+                ),
+
+                new Claim(
+                    ClaimTypes.Name,
+                    customer.FirstName + " " + customer.LastName
+                ),
+
+                new Claim(
+                    ClaimTypes.Email,
+                    customer.Email
+                ),
+
+                new Claim(
+                    ClaimTypes.Role,
+                    "Customer"
+                )
+            };
+
 
             var identity = new ClaimsIdentity(
                 claims,
@@ -246,16 +302,176 @@ namespace RestaurantManagementSystem.Controllers
 
             var principal = new ClaimsPrincipal(identity);
 
+
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 principal
             );
+
 
             return RedirectToAction(
                 "Index",
                 "Products"
             );
         }
+
+
+        // =========================================
+        // EDIT PROFILE - GET
+        // =========================================
+
+        [Authorize(Roles = "Customer")]
+        public IActionResult EditProfile()
+        {
+            int customerId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var customer = _context.Customers
+                .FirstOrDefault(c => c.CustomerID == customerId);
+
+            if (customer == null)
+                return NotFound();
+
+
+            var model = new EditProfileViewModel
+            {
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email,
+                Phone = customer.Phone,
+                Street = customer.Street,
+                City = customer.City,
+                ZipCode = customer.ZipCode
+            };
+
+
+            return View(model);
+        }
+
+
+        // =========================================
+        // EDIT PROFILE - POST
+        // =========================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> EditProfile(
+            EditProfileViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+
+            int customerId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+
+            var customer = _context.Customers
+                .FirstOrDefault(c => c.CustomerID == customerId);
+
+            if (customer == null)
+                return NotFound();
+
+
+            string email = model.Email.Trim().ToLower();
+
+
+            // =========================================
+            // CHECK EMAIL DUPLICATION
+            // =========================================
+
+            bool emailExists = _context.Customers
+                .Any(c =>
+                    c.Email.ToLower() == email &&
+                    c.CustomerID != customerId);
+
+            if (emailExists)
+            {
+                ModelState.AddModelError(
+                    "Email",
+                    "This email is already used by another account."
+                );
+
+                return View(model);
+            }
+
+
+            // =========================================
+            // UPDATE CUSTOMER
+            // =========================================
+
+            customer.FirstName = model.FirstName.Trim();
+            customer.LastName = model.LastName.Trim();
+            customer.Email = email;
+            customer.Phone = model.Phone.Trim();
+            customer.Street = model.Street.Trim();
+            customer.City = model.City.Trim();
+            customer.ZipCode = model.ZipCode.Trim();
+
+
+            _context.SaveChanges();
+
+
+            // =========================================
+            // UPDATE CLAIMS
+            // =========================================
+
+            var identity = User.Identity as ClaimsIdentity;
+
+            if (identity != null)
+            {
+                var nameClaim = identity.FindFirst(
+                    ClaimTypes.Name);
+
+                var emailClaim = identity.FindFirst(
+                    ClaimTypes.Email);
+
+
+                if (nameClaim != null)
+                    identity.RemoveClaim(nameClaim);
+
+
+                if (emailClaim != null)
+                    identity.RemoveClaim(emailClaim);
+
+
+                identity.AddClaim(
+                    new Claim(
+                        ClaimTypes.Name,
+                        customer.FirstName + " " + customer.LastName
+                    )
+                );
+
+
+                identity.AddClaim(
+                    new Claim(
+                        ClaimTypes.Email,
+                        customer.Email
+                    )
+                );
+            }
+
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(identity)
+            );
+
+
+            TempData["ProfileSuccess"] =
+                "Your profile has been updated successfully.";
+
+
+            return RedirectToAction(
+                nameof(Profile)
+            );
+        }
+
+
+        // =========================================
+        // LOGOUT
+        // =========================================
 
         public async Task<IActionResult> Logout()
         {

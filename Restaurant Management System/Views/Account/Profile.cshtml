@@ -1,0 +1,116 @@
+﻿@model RestaurantManagementSystem.Models.Customer
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container rms-container">
+
+    <div class="rms-page-header">
+        <div>
+            <div class="rms-details-label">ACCOUNT</div>
+            <h1>My <span>Profile.</span></h1>
+            <p>View and manage your personal information.</p>
+        </div>
+
+        <a asp-controller="Products"
+           asp-action="Index"
+           class="btn btn-dark-elegant">
+            &larr; Continue Shopping
+        </a>
+    </div>
+
+
+    <div class="rms-profile-card">
+
+        <!-- Profile Header -->
+        <div class="rms-profile-header">
+
+            <div class="rms-profile-avatar">
+                <i class="bi bi-person"></i>
+            </div>
+
+            <div>
+                <div class="rms-details-label">ACCOUNT</div>
+
+                <h2>
+                    @Model.FirstName @Model.LastName
+                </h2>
+
+                <p>
+                    @Model.Email
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- Personal Information -->
+        <div class="rms-profile-section">
+
+            <div class="rms-profile-section-title">
+                <h3>Personal Information</h3>
+                <p>Your account information</p>
+            </div>
+
+
+            <div class="rms-profile-grid">
+
+                <div class="rms-profile-info">
+                    <span>First Name</span>
+                    <strong>@Model.FirstName</strong>
+                </div>
+
+                <div class="rms-profile-info">
+                    <span>Last Name</span>
+                    <strong>@Model.LastName</strong>
+                </div>
+
+                <div class="rms-profile-info">
+                    <span>Email</span>
+                    <strong>@Model.Email</strong>
+                </div>
+
+                <div class="rms-profile-info">
+                    <span>Phone</span>
+                    <strong>@Model.Phone</strong>
+                </div>
+
+                <div class="rms-profile-info">
+                    <span>Street</span>
+                    <strong>@Model.Street</strong>
+                </div>
+
+                <div class="rms-profile-info">
+                    <span>City</span>
+                    <strong>@Model.City</strong>
+                </div>
+
+                <div class="rms-profile-info">
+                    <span>Zip Code</span>
+                    <strong>@Model.ZipCode</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Actions -->
+        <div class="rms-profile-actions">
+
+            <a asp-action="EditProfile" class="btn-silver">
+                <i class="bi bi-pencil"></i>
+                Edit Profile
+            </a>
+
+            <a asp-action="Logout"
+               class="btn btn-dark-elegant">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+</div>

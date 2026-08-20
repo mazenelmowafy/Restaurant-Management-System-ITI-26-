@@ -112,6 +112,120 @@ namespace RestaurantManagementSystem.Controllers
             return RedirectToAction(nameof(Details), new { id = cart.OrderId });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult IncreaseQuantity(int orderId, int productId)
+        {
+            int customerId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var item = _context.OrderItems
+                .Include(i => i.Product)
+                .Include(i => i.Order)
+                .FirstOrDefault(i =>
+                    i.OrderId == orderId &&
+                    i.ProductId == productId &&
+                    i.Order.CustomerId == customerId &&
+                    i.Order.Status == "Cart");
+
+            if (item == null)
+                return NotFound();
+
+            item.Quantity++;
+
+            item.UnitPrice = item.Product.Price;
+            item.SubTotal = item.Quantity * item.UnitPrice;
+
+            item.Order.TotalAmount = _context.OrderItems
+                .Where(i => i.OrderId == item.OrderId)
+                .Sum(i => i.SubTotal);
+
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Create));
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DecreaseQuantity(int orderId, int productId)
+        {
+            int customerId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var item = _context.OrderItems
+                .Include(i => i.Product)
+                .Include(i => i.Order)
+                .FirstOrDefault(i =>
+                    i.OrderId == orderId &&
+                    i.ProductId == productId &&
+                    i.Order.CustomerId == customerId &&
+                    i.Order.Status == "Cart");
+
+            if (item == null)
+                return NotFound();
+
+            if (item.Quantity > 1)
+            {
+                item.Quantity--;
+
+                item.UnitPrice = item.Product.Price;
+                item.SubTotal = item.Quantity * item.UnitPrice;
+            }
+
+            item.Order.TotalAmount = _context.OrderItems
+                .Where(i => i.OrderId == item.OrderId)
+                .Sum(i => i.SubTotal);
+
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Create));
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult RemoveFromCart(int orderId, int productId)
+        {
+            int customerId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var item = _context.OrderItems
+                .Include(i => i.Order)
+                .FirstOrDefault(i =>
+                    i.OrderId == orderId &&
+                    i.ProductId == productId &&
+                    i.Order.CustomerId == customerId &&
+                    i.Order.Status == "Cart");
+
+            if (item == null)
+                return NotFound();
+
+            _context.OrderItems.Remove(item);
+
+            _context.SaveChanges();
+
+            var cart = _context.Orders
+                .FirstOrDefault(o =>
+                    o.OrderId == orderId &&
+                    o.CustomerId == customerId &&
+                    o.Status == "Cart");
+
+            if (cart != null)
+            {
+                cart.TotalAmount = _context.OrderItems
+                    .Where(i => i.OrderId == orderId)
+                    .Sum(i => i.SubTotal);
+
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction(nameof(Create));
+        }
+
+
+
 
         public IActionResult Details(int id)
         {

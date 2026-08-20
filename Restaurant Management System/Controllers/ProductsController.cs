@@ -16,13 +16,18 @@ namespace RestaurantManagementSystem.Controllers
         }
 
         // مفتوحة للجميع يشوفوا المنيو
-        public IActionResult Index()
+        public IActionResult Index(string? category)
         {
             var products = _context.Products
-                .Where(p => p.IsAvailable)
-                .ToList();
+                .Where(p => p.IsAvailable);
 
-            return View(products);
+            if (!string.IsNullOrEmpty(category))
+            {
+                products = products
+                    .Where(p => p.Category == category);
+            }
+
+            return View(products.ToList());
         }
 
         // مفتوحة للجميع يشوفوا التفاصيل
@@ -110,6 +115,8 @@ namespace RestaurantManagementSystem.Controllers
                 .Sum(i => i.SubTotal);
 
             _context.SaveChanges();
+
+            TempData["CartSuccess"] = "Your item has been added to your cart!";
 
             return RedirectToAction(nameof(Index));
         }

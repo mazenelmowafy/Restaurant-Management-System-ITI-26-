@@ -4,52 +4,165 @@
     ViewData["Title"] = "My Orders";
 }
 
-<div class="container rms-container">
-    <div class="rms-page-header">
-        <h1>My Orders</h1>
-        <a asp-controller="Products" asp-action="Index" class="btn-silver">
-            Continue Shopping
-        </a>
+<div class="orders-page">
+
+    <div class="container">
+
+        <!-- Header -->
+
+        <div class="orders-page-header">
+
+            <div>
+
+                <span class="section-eyebrow">
+                    ORDER HISTORY
+                </span>
+
+                <h1>
+                    My <span>Orders.</span>
+                </h1>
+
+                <p>
+                    Track your previous orders and view their details.
+                </p>
+
+            </div>
+
+
+            <a asp-controller="Products"
+               asp-action="Index"
+               class="orders-shopping-btn">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Continue Shopping
+
+            </a>
+
+        </div>
+
+
+        @if (!Model.Any())
+        {
+            <!-- Empty Orders -->
+
+            <div class="orders-empty">
+
+                <div class="orders-empty-icon">
+                    <i class="bi bi-receipt"></i>
+                </div>
+
+                <h2>
+                    No orders yet
+                </h2>
+
+                <p>
+                    You haven't placed any orders yet.
+                    Explore our menu and find something delicious.
+                </p>
+
+                <a asp-controller="Products"
+                   asp-action="Index"
+                   class="orders-primary-btn">
+
+                    Explore Our Menu
+
+                    <i class="bi bi-arrow-right"></i>
+
+                </a>
+
+            </div>
+        }
+        else
+        {
+            <!-- Orders -->
+
+            <div class="orders-list">
+
+                @foreach (var order in Model)
+                {
+                    <div class="order-card">
+
+                        <!-- Order Main Info -->
+
+                        <div class="order-main">
+
+                            <div class="order-icon">
+
+                                <i class="bi bi-receipt"></i>
+
+                            </div>
+
+
+                            <div class="order-info">
+
+                                <span class="order-label">
+                                    ORDER
+                                </span>
+
+                                <h2>
+                                    #@order.OrderId
+                                </h2>
+
+                                <span class="order-date">
+                                    <i class="bi bi-calendar3"></i>
+
+                                    @order.OrderDate.ToString("dd MMM yyyy, hh:mm tt")
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Status -->
+
+                        <div class="order-status">
+
+                            <span class="order-label">
+                                STATUS
+                            </span>
+
+                            <span class="order-status-badge @order.Status.ToLower()">
+                                @order.Status
+                            </span>
+
+                        </div>
+
+
+                        <!-- Total -->
+
+                        <div class="order-total">
+
+                            <span class="order-label">
+                                TOTAL
+                            </span>
+
+                            <strong>
+                                @order.TotalAmount.ToString("0.00") EGP
+                            </strong>
+
+                        </div>
+
+
+                        <!-- Details -->
+
+                        <a asp-action="Details"
+                           asp-route-id="@order.OrderId"
+                           class="order-details-btn">
+
+                            View Details
+
+                            <i class="bi bi-arrow-right"></i>
+
+                        </a>
+
+                    </div>
+                }
+
+            </div>
+        }
+
     </div>
 
-    @if (!Model.Any())
-    {
-        <div class="rms-empty-state rms-surface">
-            <div class="rms-empty-icon">&#128221;</div>
-            <h5>You don't have any orders yet</h5>
-            <p class="text-muted mb-0">Once you place an order, it will show up here.</p>
-        </div>
-    }
-    else
-    {
-        <div class="rms-table-wrap">
-            <table class="table rms-table mb-0">
-                <thead>
-                    <tr>
-                        <th>Order&nbsp;ID</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Total Amount</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var order in Model)
-                    {
-                        <tr>
-                            <td>#@order.OrderId</td>
-                            <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td><span class="badge rms-badge">@order.Status</span></td>
-                            <td>@order.TotalAmount.ToString("C")</td>
-                            <td class="text-end">
-                                <a asp-action="Details" asp-route-id="@order.OrderId" class="btn btn-sm btn-outline-silver">
-                                    Details
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
 </div>

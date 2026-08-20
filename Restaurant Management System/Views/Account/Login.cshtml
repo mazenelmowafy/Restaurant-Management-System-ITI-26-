@@ -4,35 +4,126 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="container rms-container">
-    <div class="rms-surface rms-auth-card">
-        <h2>Welcome Back</h2>
-        <p class="rms-auth-sub">Sign in to continue to R.</p>
+<div class="rms-auth-page">
+
+    <div class="rms-auth-card">
+
+        <div class="rms-auth-brand">
+            <div class="rms-auth-logo">
+                <i class="bi bi-shop"></i>
+            </div>
+
+            <div>
+                <strong>Restaurant</strong>
+                <span>GOOD FOOD • GOOD MOOD</span>
+            </div>
+        </div>
+
+
+        <div class="rms-auth-heading">
+
+            <div class="rms-details-label">
+                WELCOME BACK
+            </div>
+
+            <h1>Sign In.</h1>
+
+            <p>
+                Sign in to continue ordering your favorite dishes.
+            </p>
+
+        </div>
+
 
         <form asp-action="Login" method="post">
+
             @Html.AntiForgeryToken()
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+            <div asp-validation-summary="ModelOnly"
+                 class="rms-auth-validation">
             </div>
 
-            <div class="mb-4">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" type="password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+
+            <div class="rms-auth-field">
+
+                <label asp-for="Email">
+                    Email Address
+                </label>
+
+                <div class="rms-input-wrap">
+
+                    <i class="bi bi-envelope"></i>
+
+                    <input asp-for="Email"
+                           class="form-control"
+                           placeholder="Enter your email" />
+
+                </div>
+
+                <span asp-validation-for="Email"
+                      class="text-danger">
+                </span>
+
             </div>
 
-            <button type="submit" class="btn-silver w-100">
-                Login
+
+            <div class="rms-auth-field">
+
+                <label asp-for="Password">
+                    Password
+                </label>
+
+                <div class="rms-input-wrap">
+
+                    <i class="bi bi-lock"></i>
+
+                    <input asp-for="Password"
+                           type="password"
+                           class="form-control"
+                           placeholder="Enter your password" />
+
+                </div>
+
+                <span asp-validation-for="Password"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+
+            <button type="submit"
+                    class="rms-auth-submit">
+
+                <span>Sign In</span>
+
+                <i class="bi bi-arrow-right"></i>
+
             </button>
+
         </form>
 
-        <div class="text-center mt-4" style="color:var(--rms-text-muted)">
-            <span>Don't have an account?</span>
-            <a asp-controller="Account" asp-action="Register">Register</a>
+
+        <div class="rms-auth-footer">
+
+            <span>
+                Don't have an account?
+            </span>
+
+            <a asp-controller="Account"
+               asp-action="Register">
+
+                Create Account
+
+            </a>
+
         </div>
+
     </div>
+
 </div>
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+}

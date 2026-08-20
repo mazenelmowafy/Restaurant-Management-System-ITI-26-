@@ -3,6 +3,22 @@
 @{
     ViewData["Title"] = "Menu";
 }
+@if (TempData["CartSuccess"] != null)
+{
+    <div class="cart-success-alert">
+        <i class="bi bi-check-circle-fill"></i>
+
+        <span>
+            @TempData["CartSuccess"]
+        </span>
+
+        <button type="button"
+                class="cart-alert-close"
+                onclick="this.parentElement.remove()">
+            <i class="bi bi-x"></i>
+        </button>
+    </div>
+}
 
 <div class="container rms-container">
     <div class="rms-section-title">
@@ -11,10 +27,85 @@
         <p>Explore today's selection &mdash; every dish available to order right now.</p>
     </div>
 
-    <div class="d-flex justify-content-end mb-4">
-        <a asp-controller="Orders" asp-action="Create" class="btn-outline-silver">
-            View Cart
+    <div class="menu-cart-action">
+        <a asp-controller="Orders"
+           asp-action="Create"
+           class="menu-view-cart">
+
+            <i class="bi bi-bag"></i>
+
+            <span>View Cart</span>
+
+            <i class="bi bi-arrow-right"></i>
+
         </a>
+    </div>
+    <!-- Category Filter -->
+
+    <div class="menu-category-filter">
+
+        <a asp-controller="Products"
+           asp-action="Index"
+           class="menu-filter-btn @(string.IsNullOrEmpty(Context.Request.Query["category"]) ? "active" : "")">
+            All
+        </a>
+
+        <a asp-controller="Products"
+           asp-action="Index"
+           asp-route-category="Burgers"
+           class="menu-filter-btn @(Context.Request.Query["category"] == "Burgers" ? "active" : "")">
+            Burgers
+        </a>
+
+        <a asp-controller="Products"
+           asp-action="Index"
+           asp-route-category="Pizza"
+           class="menu-filter-btn @(Context.Request.Query["category"] == "Pizza" ? "active" : "")">
+            Pizza
+        </a>
+
+        <a asp-controller="Products"
+           asp-action="Index"
+           asp-route-category="Pasta"
+           class="menu-filter-btn @(Context.Request.Query["category"] == "Pasta" ? "active" : "")">
+            Pasta
+        </a>
+
+        <a asp-controller="Products"
+           asp-action="Index"
+           asp-route-category="Sandwiches"
+           class="menu-filter-btn @(Context.Request.Query["category"] == "Sandwiches" ? "active" : "")">
+            Sandwiches
+        </a>
+
+        <a asp-controller="Products"
+           asp-action="Index"
+           asp-route-category="Sides"
+           class="menu-filter-btn @(Context.Request.Query["category"] == "Sides" ? "active" : "")">
+            Sides
+        </a>
+
+        <a asp-controller="Products"
+           asp-action="Index"
+           asp-route-category="Meals"
+           class="menu-filter-btn @(Context.Request.Query["category"] == "Meals" ? "active" : "")">
+            Meals
+        </a>
+
+        <a asp-controller="Products"
+           asp-action="Index"
+           asp-route-category="Drinks"
+           class="menu-filter-btn @(Context.Request.Query["category"] == "Drinks" ? "active" : "")">
+            Drinks
+        </a>
+
+        <a asp-controller="Products"
+           asp-action="Index"
+           asp-route-category="Desserts"
+           class="menu-filter-btn @(Context.Request.Query["category"] == "Desserts" ? "active" : "")">
+            Desserts
+        </a>
+
     </div>
 
     @if (!Model.Any())

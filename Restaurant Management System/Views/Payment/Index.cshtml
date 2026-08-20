@@ -5,41 +5,140 @@
 }
 
 <div class="container rms-container">
+
     <div class="rms-payment-card">
+
         <div class="rms-payment-head">
+
             <div>
-                <div class="rms-details-label">Secure Checkout</div>
-                <h2>Payment</h2>
-                <p>Choose your payment method and review your order total.</p>
+
+                <div class="rms-details-label">
+                    SECURE CHECKOUT
+                </div>
+
+                <h2>
+                    Payment
+                </h2>
+
+                <p>
+                    Choose your payment method and review your order total.
+                </p>
+
             </div>
-            <div class="rms-payment-mark" aria-hidden="true">R</div>
+
+            <div class="rms-payment-mark" aria-hidden="true">
+                R
+            </div>
+
         </div>
+
 
         <div class="rms-payment-summary">
+
             <div>
-                <span>Order</span>
-                <strong>#@Model.OrderId</strong>
+
+                <span>
+                    Order
+                </span>
+
+                <strong>
+                    #@Model.OrderId
+                </strong>
+
             </div>
+
+
             <div class="text-end">
-                <span>Amount Due</span>
-                <strong>@Model.Amount.ToString("C")</strong>
+
+                <span>
+                    Amount Due
+                </span>
+
+                <strong>
+                    @Model.Amount.ToString("0.00") EGP
+                </strong>
+
             </div>
+
         </div>
 
-        <div class="rms-payment-field">
-            <label asp-for="PaymentMethod" class="form-label">Payment Method</label>
-            <select asp-for="PaymentMethod" class="form-select">
-                <option value="">Select Payment Method</option>
-                <option value="Cash">Cash</option>
-                <option value="Credit Card">Credit Card</option>
-                <option value="Debit Card">Debit Card</option>
-            </select>
-            <span asp-validation-for="PaymentMethod" class="text-danger"></span>
-        </div>
 
-        <div class="rms-payment-actions">
-            <button type="button" class="btn-silver">Pay Now</button>
-            <a asp-controller="Orders" asp-action="Details" asp-route-id="@Model.OrderId" class="btn btn-dark-elegant">Back to Order</a>
-        </div>
+        <form asp-action="Index"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden"
+                   asp-for="OrderId" />
+
+            <input type="hidden"
+                   asp-for="Amount" />
+
+
+            <div class="rms-payment-field">
+
+                <label asp-for="PaymentMethod"
+                       class="form-label">
+
+                    Payment Method
+
+                </label>
+
+
+                <select asp-for="PaymentMethod"
+                        class="form-select">
+
+                    <option value="">
+                        Select Payment Method
+                    </option>
+
+                    <option value="Cash">
+                        Cash
+                    </option>
+
+                    <option value="Credit Card">
+                        Credit Card
+                    </option>
+
+                    <option value="Debit Card">
+                        Debit Card
+                    </option>
+
+                </select>
+
+
+                <span asp-validation-for="PaymentMethod"
+                      class="text-danger">
+                </span>
+
+            </div>
+
+
+            <div class="rms-payment-actions">
+
+                <button type="submit"
+                        class="btn-silver">
+
+                    Pay Now
+
+                    <i class="bi bi-arrow-right"></i>
+
+                </button>
+
+
+                <a asp-controller="Orders"
+                   asp-action="Details"
+                   asp-route-id="@Model.OrderId"
+                   class="btn btn-dark-elegant">
+
+                    Back to Order
+
+                </a>
+
+            </div>
+
+        </form>
+
     </div>
+
 </div>

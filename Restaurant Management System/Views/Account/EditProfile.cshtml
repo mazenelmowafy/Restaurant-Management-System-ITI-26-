@@ -1,0 +1,157 @@
+﻿@model RestaurantManagementSystem.ViewModels.EditProfileViewModel
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class="container rms-container">
+
+    <div class="rms-page-header">
+        <div>
+            <div class="rms-details-label">ACCOUNT</div>
+            <h1>Edit <span>Profile.</span></h1>
+            <p>Update your personal information.</p>
+        </div>
+
+        <a asp-action="Profile"
+           class="btn btn-dark-elegant">
+            &larr; Back to Profile
+        </a>
+    </div>
+
+
+    <div class="rms-profile-card">
+
+        <form asp-action="EditProfile" method="post">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3">
+            </div>
+
+
+            <div class="rms-profile-section">
+
+                <div class="rms-profile-section-title">
+                    <h3>Personal Information</h3>
+                    <p>Update your account details below.</p>
+                </div>
+
+
+                <div class="rms-profile-grid">
+
+                    <div class="rms-profile-info">
+                        <label asp-for="FirstName">First Name</label>
+
+                        <input asp-for="FirstName"
+                               class="form-control" />
+
+                        <span asp-validation-for="FirstName"
+                              class="text-danger">
+                        </span>
+                    </div>
+
+
+                    <div class="rms-profile-info">
+                        <label asp-for="LastName">Last Name</label>
+
+                        <input asp-for="LastName"
+                               class="form-control" />
+
+                        <span asp-validation-for="LastName"
+                              class="text-danger">
+                        </span>
+                    </div>
+
+
+                    <div class="rms-profile-info">
+                        <label asp-for="Email">Email</label>
+
+                        <input asp-for="Email"
+                               class="form-control" />
+
+                        <span asp-validation-for="Email"
+                              class="text-danger">
+                        </span>
+                    </div>
+
+
+                    <div class="rms-profile-info">
+                        <label asp-for="Phone">Phone</label>
+
+                        <input asp-for="Phone"
+                               class="form-control" />
+
+                        <span asp-validation-for="Phone"
+                              class="text-danger">
+                        </span>
+                    </div>
+
+
+                    <div class="rms-profile-info">
+                        <label asp-for="Street">Street</label>
+
+                        <input asp-for="Street"
+                               class="form-control" />
+
+                        <span asp-validation-for="Street"
+                              class="text-danger">
+                        </span>
+                    </div>
+
+
+                    <div class="rms-profile-info">
+                        <label asp-for="City">City</label>
+
+                        <input asp-for="City"
+                               class="form-control" />
+
+                        <span asp-validation-for="City"
+                              class="text-danger">
+                        </span>
+                    </div>
+
+
+                    <div class="rms-profile-info">
+                        <label asp-for="ZipCode">Zip Code</label>
+
+                        <input asp-for="ZipCode"
+                               class="form-control" />
+
+                        <span asp-validation-for="ZipCode"
+                              class="text-danger">
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="rms-profile-actions">
+
+                <button type="submit"
+                        class="btn-silver">
+                    Save Changes
+                </button>
+
+                <a asp-action="Profile"
+                   class="btn btn-dark-elegant">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

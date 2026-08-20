@@ -2,48 +2,456 @@
     ViewData["Title"] = "Home";
 }
 
-<section class="rms-hero">
-    <div class="container position-relative">
-        <div class="rms-kicker">Fine Dining, Simply Served</div>
-        <h1>Welcome to <span class="rms-hero-logo" role="img" aria-label="R restaurant logo"><span>R</span></span></h1>
-        <hr class="rms-divider" />
-        <p class="lead">
-            Discover a menu crafted with care, order in a few clicks, and let us
-            take care of the rest &mdash; from kitchen to table.
+<!-- =========================================
+     HERO
+========================================= -->
+
+<section class="home-hero">
+
+    <div class="home-hero-overlay"></div>
+
+    <div class="container home-hero-content">
+
+        <span class="hero-eyebrow">
+            FINE DINING, SIMPLY SERVED
+        </span>
+
+        <h1>
+            Great Food.
+            <br />
+            <span>Made With Passion.</span>
+        </h1>
+
+        <p>
+            Discover delicious dishes prepared with fresh ingredients,
+            crafted with care and served straight to your table.
         </p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a asp-controller="Products" asp-action="Index" class="btn-silver">
-                View Menu
+
+        <div class="hero-actions">
+
+            <a asp-controller="Products"
+               asp-action="Index"
+               class="hero-primary-btn">
+
+                Explore Menu
+                <i class="bi bi-arrow-right"></i>
+
             </a>
-            <a asp-controller="Orders" asp-action="Index" class="btn-outline-silver">
-                My Orders
+
+            <a asp-controller="Home"
+               asp-action="About"
+               class="hero-secondary-btn">
+
+                Our Story
+
             </a>
+
         </div>
+
     </div>
+
+    <div class="hero-scroll-indicator">
+
+        <span>Scroll to explore</span>
+
+        <i class="bi bi-arrow-down"></i>
+
+    </div>
+
 </section>
 
-<div class="container rms-container">
-    <div class="row g-4 text-center">
-        <div class="col-md-4">
-            <div class="rms-surface p-4 h-100">
-                <div style="font-size:1.8rem; color:var(--rms-silver);">&#127860;</div>
-                <h5 class="mt-3">Curated Menu</h5>
-                <p class="text-muted small mb-0">Seasonal dishes, plated with intention and served with pride.</p>
+
+<!-- =========================================
+     ABOUT SECTION
+========================================= -->
+
+<section class="home-about">
+
+    <div class="container">
+
+        <div class="row align-items-center g-5">
+
+            <!-- Text -->
+
+            <div class="col-lg-6">
+
+                <span class="section-eyebrow">
+                    OUR STORY
+                </span>
+
+                <h2 class="section-title">
+                    Good Food Brings
+                    <span>People Together.</span>
+                </h2>
+
+                <p class="section-text">
+                    At Restaurant, we believe that great food is more than
+                    just a meal. It is about fresh ingredients, thoughtful
+                    preparation, and creating moments worth remembering.
+                </p>
+
+                <p class="section-text">
+                    From our kitchen to your table, every dish is prepared
+                    with care and served with the quality you deserve.
+                </p>
+
+
+                <div class="about-highlights">
+
+                    <div class="about-highlight">
+
+                        <span class="highlight-icon">
+                            <i class="bi bi-check2"></i>
+                        </span>
+
+                        <div>
+                            <strong>Fresh Ingredients</strong>
+                            <small>Quality ingredients in every dish.</small>
+                        </div>
+
+                    </div>
+
+
+                    <div class="about-highlight">
+
+                        <span class="highlight-icon">
+                            <i class="bi bi-heart"></i>
+                        </span>
+
+                        <div>
+                            <strong>Made With Care</strong>
+                            <small>Every dish prepared with passion.</small>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="about-actions">
+
+                    <a asp-controller="Products"
+                       asp-action="Index"
+                       class="about-primary-btn">
+
+                        Explore Our Menu
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </a>
+
+                    <a asp-controller="Home"
+                       asp-action="About"
+                       class="about-link">
+
+                        Learn More
+                        <i class="bi bi-arrow-up-right"></i>
+
+                    </a>
+
+                </div>
+
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="rms-surface p-4 h-100">
-                <div style="font-size:1.8rem; color:var(--rms-silver);">&#128722;</div>
-                <h5 class="mt-3">Effortless Ordering</h5>
-                <p class="text-muted small mb-0">Add your favorites to the cart and check out in moments.</p>
+
+
+            <!-- Visual -->
+
+            <div class="col-lg-6">
+
+                <div class="about-visual">
+
+                    <div class="about-visual-card">
+
+                        <i class="bi bi-shop"></i>
+
+                        <strong>
+                            Fresh.
+                        </strong>
+
+                        <span>
+                            Simple. Delicious.
+                        </span>
+
+                    </div>
+
+                    <div class="about-visual-decoration"></div>
+
+                </div>
+
             </div>
+
         </div>
-        <div class="col-md-4">
-            <div class="rms-surface p-4 h-100">
-                <div style="font-size:1.8rem; color:var(--rms-silver);">&#9201;</div>
-                <h5 class="mt-3">Track Every Order</h5>
-                <p class="text-muted small mb-0">Follow your order status from confirmation to the table.</p>
-            </div>
-        </div>
+
     </div>
-</div>
+
+</section>
+<!-- =========================================
+     EXPLORE MENU
+========================================= -->
+
+<section class="explore-menu">
+
+    <div class="container">
+
+        <!-- Header -->
+
+        <div class="explore-menu-header">
+
+            <span class="section-eyebrow">
+                EXPLORE OUR MENU
+            </span>
+
+            <h2 class="section-title">
+                Something Delicious
+                <span>For Everyone.</span>
+            </h2>
+
+            <p class="section-text">
+                From classic favorites to something new,
+                explore our menu and find your next favorite dish.
+            </p>
+
+        </div>
+
+
+        <!-- Categories -->
+
+        <div class="row g-4">
+
+            <!-- Burgers -->
+
+            <div class="col-6 col-md-4 col-lg-3">
+
+                <a asp-controller="Products"
+                   asp-action="Index"
+                   asp-route-category="Burgers"
+                   class="category-card">
+
+                    <div class="category-icon">
+                        <i class="bi bi-egg-fried"></i>
+                    </div>
+
+                    <h3>
+                        Burgers
+                    </h3>
+
+                    <span>
+                        Explore
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- Pizza -->
+
+            <div class="col-6 col-md-4 col-lg-3">
+
+                <a asp-controller="Products"
+                   asp-action="Index"
+                   asp-route-category="Pizza"
+                   class="category-card">
+
+                    <div class="category-icon">
+                        <i class="bi bi-circle"></i>
+                    </div>
+
+                    <h3>
+                        Pizza
+                    </h3>
+
+                    <span>
+                        Explore
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- Pasta -->
+
+            <div class="col-6 col-md-4 col-lg-3">
+
+                <a asp-controller="Products"
+                   asp-action="Index"
+                   asp-route-category="Pasta"
+                   class="category-card">
+
+                    <div class="category-icon">
+                        <i class="bi bi-cup-hot"></i>
+                    </div>
+
+                    <h3>
+                        Pasta
+                    </h3>
+
+                    <span>
+                        Explore
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- Sandwiches -->
+
+            <div class="col-6 col-md-4 col-lg-3">
+
+                <a asp-controller="Products"
+                   asp-action="Index"
+                   asp-route-category="Sandwiches"
+                   class="category-card">
+
+                    <div class="category-icon">
+                        <i class="bi bi-layers"></i>
+                    </div>
+
+                    <h3>
+                        Sandwiches
+                    </h3>
+
+                    <span>
+                        Explore
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- Sides -->
+
+            <div class="col-6 col-md-4 col-lg-3">
+
+                <a asp-controller="Products"
+                   asp-action="Index"
+                   asp-route-category="Sides"
+                   class="category-card">
+
+                    <div class="category-icon">
+                        <i class="bi bi-basket"></i>
+                    </div>
+
+                    <h3>
+                        Sides
+                    </h3>
+
+                    <span>
+                        Explore
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- Meals -->
+
+            <div class="col-6 col-md-4 col-lg-3">
+
+                <a asp-controller="Products"
+                   asp-action="Index"
+                   asp-route-category="Meals"
+                   class="category-card">
+
+                    <div class="category-icon">
+                        <i class="bi bi-grid"></i>
+                    </div>
+
+                    <h3>
+                        Meals
+                    </h3>
+
+                    <span>
+                        Explore
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- Drinks -->
+
+            <div class="col-6 col-md-4 col-lg-3">
+
+                <a asp-controller="Products"
+                   asp-action="Index"
+                   asp-route-category="Drinks"
+                   class="category-card">
+
+                    <div class="category-icon">
+                        <i class="bi bi-cup-straw"></i>
+                    </div>
+
+                    <h3>
+                        Drinks
+                    </h3>
+
+                    <span>
+                        Explore
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- Desserts -->
+
+            <div class="col-6 col-md-4 col-lg-3">
+
+                <a asp-controller="Products"
+                   asp-action="Index"
+                   asp-route-category="Desserts"
+                   class="category-card">
+
+                    <div class="category-icon">
+                        <i class="bi bi-cake2"></i>
+                    </div>
+
+                    <h3>
+                        Desserts
+                    </h3>
+
+                    <span>
+                        Explore
+                        <i class="bi bi-arrow-right"></i>
+                    </span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- Full Menu -->
+
+        <div class="explore-menu-action">
+
+            <a asp-controller="Products"
+               asp-action="Index"
+               class="explore-full-menu-btn">
+
+                View Full Menu
+
+                <i class="bi bi-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>

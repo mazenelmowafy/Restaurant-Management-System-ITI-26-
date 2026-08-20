@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization; // تمت الإضافة
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantManagementSystem.Data;
 using RestaurantManagementSystem.ViewModels;
-using System.Security.Claims; // تمت الإضافة
+using System.Security.Claims;
 
 namespace RestaurantManagementSystem.Controllers
 {
-    // حماية صفحة الدفع بحيث لا يدخلها إلا العميل المسجل دخوله
     [Authorize(Roles = "Customer")]
     public class PaymentController : Controller
     {
@@ -19,19 +18,26 @@ namespace RestaurantManagementSystem.Controllers
 
         public IActionResult Index(int orderId)
         {
-            // 1. استخراج الـ ID الخاص بالعميل من الـ Claims بدلاً من السشن
-            int customerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            int customerId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            // 2. البحث عن الطلب والتأكد أنه يخص نفس العميل
             var order = _context.Orders
                 .FirstOrDefault(o =>
                     o.OrderId == orderId &&
-                    o.CustomerId == customerId); // قمنا بإزالة .Value لأن المتغير أصبح int صريح
+                    o.CustomerId == customerId);
 
             if (order == null)
                 return NotFound();
 
-            // 3. تجهيز بيانات الدفع للواجهة
+            // Already confirmed → cannot pay again
+            if (order.Status != "Pending")
+            {
+                return RedirectToAction(
+                    "Details",
+                    "Orders",
+                    new { id = order.OrderId });
+            }
+
             var model = new PaymentViewModel
             {
                 OrderId = order.OrderId,
@@ -40,6 +46,52 @@ namespace RestaurantManagementSystem.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Index(PaymentViewModel model)
+        {
+            int customerId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var order = _context.Orders
+                .FirstOrDefault(o =>
+                    o.OrderId == model.OrderId &&
+                    o.CustomerId == customerId);
+
+            if (order == null)
+                return NotFound();
+            if (order.Status != "Pending")
+            {
+                return RedirectToAction(
+                    "Details",
+                    "Orders",
+                    new { id = order.OrderId });
+            }
+
+            if (string.IsNullOrEmpty(model.PaymentMethod))
+            {
+                ModelState.AddModelError(
+                    "PaymentMethod",
+                    "Please select a payment method.");
+
+                model.Amount = order.TotalAmount;
+
+                return View(model);
+            }
+
+            order.Status = "Confirmed";
+
+            _context.SaveChanges();
+
+            TempData["PaymentSuccess"] =
+                "Payment completed successfully!";
+
+            return RedirectToAction(
+                "Details",
+                "Orders",
+                new { id = order.OrderId });
         }
     }
 }
